@@ -1,11 +1,10 @@
 {
-  "name": "angular-electron",
-  "version": "9.0.3",
-  "description": "Angular 11 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "poe-recipe",
+  "version": "0.0.1",
+  "description": "App for highlighting vendor recipes in you stash tab",
+  "homepage": "https://github.com/CLOUGH/poe-recipe",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Warren Clough"
   },
   "keywords": [
     "angular",
