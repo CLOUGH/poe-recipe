@@ -1,0 +1,27 @@
+.stash-grid {
+  position: relative;
+  display: flex;
+  height: 100%;
+  margin:auto;
+  // justify-content: center;
+}
+.wrapper {
+  height: 80vh;
+}
+img.stash-grid{
+  position: absolute;
+  object-fit: contain;
+
+}
+.item {
+  position: absolute;
+  &.identified{
+    background-color: rgba(25,26,150,0.25);
+  }
+  &.unidentified {
+    background-color: rgba(210,0,0,0.18)
+  }
+}
+.highlight {
+  box-shadow: inset 0 0 5px #FFFF1B;
+}

@@ -1,0 +1,44 @@
+<form (ngSubmit)="save()">
+  <mat-card class="mat-elevation-z0">
+    <mat-card-header>
+      <mat-card-title>Settings</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-form-field>
+        <mat-label>Account Name</mat-label>
+        <input matInput type="text" [(ngModel)]="settings.accountName" name="account-name">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>POE Session ID</mat-label>
+        <input matInput type="password" [ngModel]="settings.poeSessionId" (ngModelChange)="onPoeSessionIdChange($event)"
+          name="poe-session-id">
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Character</mat-label>
+        <mat-select [ngModel]="activeCharacterName" (ngModelChange)="onActiveCharacterChanged($event)"
+          [disabled]="!characters || characters.length==0" name="characters">
+          <mat-option *ngFor="let character of characters" [value]="character.name">
+            {{ character.name}} ({{character.league}})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <h3>Chaos Recipe Stash Tabs</h3>
+      <section class="stash-checkbox" *ngIf="stashTab">
+        <mat-checkbox #selectedTabs *ngFor="let tab of stashTab.tabs; index as i" [value]="tab"
+          [checked]="isSelectedTab(tab)" (change)="onSelectedTabChanged()" [disabled]="!isChaosItemStashTab(tab)">
+          {{tab.n}}</mat-checkbox>
+      </section>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-raised-button type="button" (click)="cancel()">
+        Cancel
+      </button>
+      <button color="accent" mat-accent mat-raised-button type="submit">
+        Save
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

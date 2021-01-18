@@ -1,0 +1,35 @@
+:host {
+
+}
+.settings-btn {
+  float: right;
+}
+.container {
+  clear: both;
+  padding: 15px;
+}
+
+pre {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.stash-tabs-container {
+  min-height: 80vh;
+}
+
+.chaos-set-items {
+  margin-top: 15px !important;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  mat-radio-button {
+    padding-left: 15px;
+  }
+}
+
+.inventory-mode {
+  mat-radio-button {
+    margin-right: 15px;
+  }
+}

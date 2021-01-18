@@ -1,0 +1,54 @@
+<button color="accent" mat-icon-button class="settings-btn" (click)="openSettings()">
+  <mat-icon>settings</mat-icon>
+</button>
+<button color="accent" mat-icon-button class="settings-btn" (click)="refersh()">
+  <mat-icon>refresh</mat-icon>
+</button>
+
+<div class="container">
+  
+
+  <mat-card class="mat-elevation-z8">
+    <mat-card-header>
+      <mat-radio-group  [(ngModel)]="currentMode"  class="inventory-mode">
+        <mat-radio-button [value]="'chaos'">
+          Chaos Recipe
+        </mat-radio-button>
+        <mat-radio-button [value]="'search'" >
+          Search
+        </mat-radio-button>
+      </mat-radio-group>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-radio-group class="chaos-set-items" [ngModel]="selectedSetIndex" (ngModelChange)="this.selectedSetIndex=$event;this.onTabChanged(selectedTabIndex)" *ngIf="currentMode.match('chaos')" >
+        <mat-radio-button *ngFor="let chaosSet of chaosSetItems;let i=index" [value]="i">
+          Set {{i}} <span *ngIf="chaosSet.isComplete">[Complete]</span>
+        </mat-radio-button>
+      </mat-radio-group>
+      <div *ngIf="currentMode.match('search')">
+        <form [formGroup]="searchForm">
+          <mat-form-field class="example-full-width">
+            <mat-label>Min Item Level</mat-label>
+            <input matInput type="numnber" min="0" max="100" formControlName="minItemLevel">
+          </mat-form-field>
+          <mat-form-field class="example-full-width">
+            <mat-label>Max Item Level</mat-label>
+            <input matInput type="numnber" min="0" max="100" formControlName="maxItemLevel">
+          </mat-form-field>
+        </form>
+      </div>
+      
+    </mat-card-content>
+    
+    <mat-tab-group color="accent" mat-align-tabs="start" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event)">
+      
+      <mat-tab  [label]="stashTab.currentTab.n" *ngFor="let stashTab of selectedStashes;index as i" [disabled]="!stashContainsSelectedSet(i)">
+        <app-stash-tab [stashTab]="stashTab" *ngIf="i===selectedTabIndex"
+          [highlightedItemIndex]="this.getHighLightedItems(i)"></app-stash-tab>
+      </mat-tab>
+    </mat-tab-group>
+    
+  </mat-card>
+
+
+</div>

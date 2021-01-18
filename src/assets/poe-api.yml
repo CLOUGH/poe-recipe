@@ -1,0 +1,957 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+# Added by API Auto Mocking Plugin
+  - description: PathofExile Official Site
+    url: https://www.pathofexile.com
+  - description: PathofExile Official Site Russian
+    url: https://ru.pathofexile.com
+  - description: Garena Taiwan Site
+    url: https://web.poe.garena.tw
+  - description: Tencent China Site
+    url: https://poe.game.qq.com
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Chuanhsing/poe/1.0.0
+info:
+  description: |
+    This is a sample PathofExile API.
+    You can get new API updates from https://www.pathofexile.com/forum/view-forum/674 and
+    https://www.pathofexile.com/developer/docs/api
+  version: "1.0.0"
+  title: PathofExile API
+  contact:
+    url: 'https://github.com/Chuanhsing/poe-api/'
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: POESESSID  # cookie name
+  schemas:
+    Realms:
+      description: |
+        The realm of the leagues: pc (default), xbox, or sony
+      type: string
+      enum:
+        - pc
+        - xbox
+        - sony
+      default: pc
+    Leagues:
+      type: string
+      enum:
+        - Standard
+        - Hardcore
+        - Delirium
+        - Hardcore Delirium
+        - SSF Standard
+        - SSF Hardcore
+        - SSF Delirium
+        - SSF Delirium HC
+    Item:
+      type: object
+      properties:
+        verified:
+          type: boolean
+          description: true if the item has not changed since it was linked.
+        w:
+          type: number
+          description: Width of the item in inventory tiles.
+        h:
+          type: number
+          description: Height of the item in inventory tiles.
+        ilvl:
+          type: number
+          description: item level
+        icon:
+          type: string
+          description: url to the image of the item
+        league:
+          type: string
+          description: league identifier
+        id:
+          type: string
+          format: uuid
+        elder:
+          type: boolean
+          description: true if the item can have elder mods (elder background).
+        shaper:
+          type: boolean
+          description: true if the item can have shaper mods (shaper background).
+        fractured:
+          type: boolean
+          description: true if the item can have fractured mods (fractured background).
+        sockets:
+          type: object
+          properties:
+            group:
+              type: number
+              description: Every socket that has the same group is linked.
+            attr:
+              description: attributes e.g. dex, int, strength
+              anyOf:
+                - type: string
+                  enum:
+                    - D
+                    - I
+                    - S
+                  description: >
+                    Possible values:
+                      * `D` - dexterity
+                      * `I` - intelligence
+                      * `S` - strength
+                - type: boolean
+                  description: abyss sockets don't have attributes
+            sColour:
+              type: string
+              enum:
+                - B
+                - G
+                - R
+                - W
+                - A
+              description: >
+                Possible values:
+                  - `B` - blue
+                  - `G` - green
+                  - `R` - red
+                  - `W` - white
+                  - `A` - abyss
+        name:
+          type: string
+          description: unique name of the item
+        typeLine:
+          type: string
+          description: name of the baseitem (+prefix/suffix if existing)
+        identified:
+          type: boolean
+          description: true if the item is identified
+        corrupted:
+          type: boolean
+          description: true if the item is corrupted
+        properties:
+          type: array
+          items:
+            $ref: "#/components/schemas/ItemLineContent"
+        utilityMods:
+          type: array
+          description: \"Implicit\" mods for flasks.
+          items:
+            type: string
+        explicitMods:
+          type: array
+          items:
+            type: string
+        craftedMods:
+          type: array
+          items:
+            type: string
+          description: master crafted mods
+        enchantMods:
+          type: array
+          items:
+            type: string
+          description: enchantments
+        fracturedMods:
+          type: array
+          items:
+            type: string
+          description: fractured mods
+        flavourText:
+          type: array
+          items:
+            type: string
+          description: Array of lines of the flavour text of e.g. unique items.
+        descrText:
+          type: string
+          description: description
+        secDescrText:
+          type: string
+          description: secondary description
+        frameType:
+          type: number
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+          description: >
+            Frame "color" of the item depending on rarity, item type (e.g. gem) etc.
+
+            Possible values with examples:
+              * `0` - normal items
+              * `1` - magic items
+              * `2` - rare items
+              * `3` - unique items
+              * `4` - gems
+        category:
+          description: >
+            Should only contain one property which is the "superclass" and an array
+            where the only member is the "subclass"
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+        x:
+          type: number
+          description: "X coordinate in the specified frame."
+        y:
+          type: number
+          description: "Y coordinate in the specified frame."
+        inventoryId:
+          type: string
+          description: >
+            Id of the slot where this item is located. `StashX` for stash number `X`.
+            `BodyArmour`, `Flask` etc for actual inventory slots.
+        isRelic:
+          type: boolean
+          description: true if the item is a relic item (introduced in Legacy league).
+        socketetedItems:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+          description: >
+            List of items that are socketed into the sockets of the item. The
+            schema has an additional property __socket__ which contains the
+            socket index.
+        socket:
+          type: number
+          description: Socket index in the parent item in which this item is socketed.
+        colour:
+          type: string
+          description: >
+            gem colour (originates from attribute requirement):
+              * `D` - green
+              * `I` - blue
+              * `S` - red
+              * `G` - white
+          enum:
+            - D
+            - I
+            - S
+            - G
+    ItemLineContent:
+      type: object
+      properties:
+        name:
+          type: string
+        values:
+          type: array
+          description: >
+            Tuple where the first value is the display string.
+            The second value describes how the value should be displayed:
+              * 0 - white (simple) text
+              * 1 - blue (augmented) text
+              * 4 - red (fire damage) text
+              * 5 - blue (cold damage) text
+              * 6 - yellow (lightning damage) text
+              * 7 - red-violet (chaos damage) text
+          items:
+            type: array
+            minItems: 2
+            maxItems: 2
+            items:
+              anyOf:
+                - type: string
+                - type: number
+        displayMode:
+          type: number
+          description: >
+            Possible values:
+              * 0 - `name` should be displayed as \`${name}: ${values.join(', ')}\` if
+                  values.length > 0 otherwise just '${name}'
+              * 1 - `name` should be displayed as \`${values[0]} ${name}\`
+              * 2 - `name__ should be display as \`${progressBar(values[0])} ${values[0]}\`
+                    i.e. `name` is not displayed
+              * 3 - `name` field contains placeholders for the values in
+                      the format of `%\d`. The number nth value in `values` (0-based)
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+        type:
+          type: number
+          description: The order in which the lines should be displayed
+    SearchSource:
+      type: object
+      properties:
+        query:
+          type: object
+          properties:
+            filters:
+              type: object
+              description: not required
+              properties:
+                trade_filters:
+                  type: object
+                  properties:
+                    disabled:
+                      type: boolean
+                      enum: [false, true]
+                    filters:
+                      type: object
+                      properties:
+                        price:
+                          type: object
+                          properties:
+                            min:
+                              type: integer
+                              example: 1
+                            max:
+                              type: integer
+                              example: 30
+            status:
+              type: object
+              description: not required
+              properties:
+                option:
+                  type: string
+                  enum: [online,any]
+                  default: online
+            stats:
+              type: array
+              description: not required
+              items:
+                $ref: "#/components/schemas/SearchSourceStats"
+            name:
+              type: string
+              example: Tabula Rasa
+            type:
+              type: string
+              example: Simple Robe
+        sort:
+          type: object
+          description: not required
+          properties:
+            price:
+              type: string
+              example: asc
+              default: asc
+    SearchSourceStats:
+      type: object
+      properties:
+        type:
+          type: string
+          example: and
+        filters:
+          type: array
+          items:
+            type: string
+          example: []
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: string
+          example: Wqn2LKFm
+        result:
+          type: array
+          items:
+            type: string
+          example: [c593ccc98580e892eb0745048a8378927b452070e91da03139a00d450eca7477,e1105792ac87113b20487d7cb2d5b9fd43f40b3bdd8a55780acbaaad513c9b65]
+        total:
+          type: integer
+          example: 1
+paths:
+  /character-window/get-characters:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get Characters
+      description: >
+        Priavte mode account need session to get information
+      parameters:
+        - name: accountName
+          in: query
+          description: 'ex: _Wrex'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /character-window/get-items:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get Items
+      description: >
+        Priavte mode account need session to get information
+      parameters:
+        - name: accountName
+          in: query
+          description: 'ex: _Wrex'
+          required: true
+          schema:
+            type: string
+        - name: character
+          in: query
+          description: 'ex: Morrigan'
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Item"
+  /character-window/get-passive-skills:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get Passive Skills
+      description: >
+        Priavte mode account need session to get information
+      parameters:
+        - name: accountName
+          in: query
+          description: 'ex: _Wrex'
+          required: true
+          schema:
+            type: string
+        - name: character
+          in: query
+          description: 'ex: Morrigan'
+          required: true
+          schema:
+            type: string
+        - name: reqData
+          in: query
+          required: true
+          schema:
+            type: number
+            enum: [0, 1]
+      responses:
+        '200':
+          description: OK
+  /character-window/get-stash-items:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get Items
+      parameters:
+        - name: league
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+        - name: realm
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/Realms'
+        - name: accountName
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: tabs
+          in: query
+          description: '{0,1} 1 to shows tabs name, position, colors'
+          required: true
+          schema:
+            type: number
+            enum: [0, 1]
+        - name: tabIndex
+          in: query
+          description: '{0,...,N}'
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+  /character-window/get-mtx-stash-items:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get MTXs
+      parameters:
+        - name: league
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+        - name: tabs
+          in: query
+          description: '{0,1} 1 to shows tabs name, position, colors'
+          required: true
+          schema:
+            type: number
+            enum: [0, 1]
+        - name: sortOrder
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [category, theme]
+      responses:
+        '200':
+          description: OK
+  /character-window/get-account-name-by-character:
+    get:
+      security:
+        - cookieAuth: []
+      summary: Get Account Name
+      parameters:
+        - name: character
+          in: query
+          required: true
+          schema:
+            type: string
+          example: QuillHitman
+      responses:
+        '200':
+          description: OK
+  /api/seasons:
+    get:
+      summary: Get Seasons
+      responses:
+        '200':
+          description: OK
+  /api/leagues:
+    get:
+      summary: Get a list of current and past leagues.
+      description: |
+        * https://www.pathofexile.com/developer/docs/api-resource-leagues
+      parameters:
+        - name: type
+          in: query
+          description: >
+            Possible values:
+              * `main` - retrieves main leagues (ones from the character screen)
+              * `event` - retrieves event leagues
+              * `season` - retrieves leagues in a particular season
+          schema:
+            type: string
+            enum: [main, event, season]
+        - name: realm
+          in: query
+          description: |
+            The realm of the leagues: pc (default), xbox, or sony
+          schema:
+            $ref: '#/components/schemas/Realms'
+        - name: season
+          in: query
+          description: |
+            A particular season id. Required when type=season.
+          schema:
+            type: string
+        - name: compat
+          in: query
+          description: |
+            Possible values:
+              * `0` - Displays the full info for leagues retrieved (will only retrieve a maximum of 50 leagues) (the default)
+              * `1` - Display compact info for leagues retrieved (will retrieve up to 230 leagues)
+          schema:
+            type: number
+            enum: [0, 1]
+        - name: limit
+          in: query
+          description: |
+            This specifies the number of league entries to include. By default this is the maximum, which depends on the setting above.
+          schema:
+            type: number
+        - name: offset
+          in: query
+          description: |
+            This specifies the offset to the first league entry to include. Default: 0.
+          schema:
+            type: number
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/leagues/{id}:
+    get:
+      summary: Get a single league by id.
+      parameters:
+        - name: id
+          in: path
+          description: |
+            The id (name) of the league.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+        - name: realm
+          in: query
+          description: |
+            The realm of the leagues: pc (default), xbox, or sony
+          schema:
+            $ref: '#/components/schemas/Realms'
+        - name: limit
+          in: query
+          description: |
+            When including the ladder with ladder=1, this specifies the number of ladder entries to include. Default: 20, Max: 200.
+          schema:
+            type: number
+        - name: offset
+          in: query
+          description: |
+            When including the ladder with ladder=1, this specifies the offset to the first ladder entry to include. Default: 0.
+          schema:
+            type: number
+        - name: track
+          in: query
+          description: |
+            When including the ladder with ladder=1, this setting adds unique IDs for each character returned. These can be used when name conflicts occur.
+          schema:
+            type: number
+        - name: accountName
+          in: query
+          description: |
+            League only: Filters by account name within the first 15000 results.
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          description: |
+            Labyrinth only: Standard (1), Cruel (2), or Merciless (3)
+          schema:
+            type: string
+            enum: [Standard, Cruel, Merciless]
+        - name: start
+          in: query
+          description: |
+            Labyrinth only: Timestamp of the ladder you want.
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [depth, depthsolo]
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/league-rules:
+    get:
+      summary: Get a list of all possible league rules.
+      description: |
+        https://www.pathofexile.com/developer/docs/api-resource-league-rules
+      parameters:
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/league-rules/{id}:
+    get:
+      summary: Get a single league rule by id.
+      description: |
+        https://www.pathofexile.com/developer/docs/api-resource-league-rules
+      parameters:
+        - name: id
+          in: path
+          description: The rule id.
+          required: true
+          schema:
+            type: number
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/ladders/{id}:
+    get:
+      summary: Get a ladder by league id. There is a restriction in place on the last ladder entry you are able to retrieve which is set to 15000.
+      description: >
+        * https://www.pathofexile.com/developer/docs/api-resource-ladders
+      parameters:
+        - name: id
+          in: path
+          description: |
+            The id (name) of the league for the ladder you want to retrieve.
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+        - name: limit
+          in: query
+          description: |
+            Specifies the number of ladder entries to include. Default: 20, Max: 200.
+          schema:
+            type: number
+        - name: offset
+          in: query
+          description: |
+            Specifies the offset to the first ladder entry to include. Default: 0.
+          schema:
+            type: number
+        - name: type
+          in: query
+          description: |
+            Specifies the type of ladder, options: [league (default), pvp, labyrinth]
+          schema:
+            type: string
+            enum: [league, pvp, labyrinth]
+        - name: track
+          in: query
+          description: |
+            Adds unique IDs for each character returned. These can be used when name conflicts occur. Default: true
+          schema:
+            type: string
+        - name: accountName
+          in: query
+          description: |
+            League only: Filters by account name within the first 15000 results.
+          schema:
+            type: number
+        - name: difficulty
+          in: query
+          description: |
+            Labyrinth only: Standard (1), Cruel (2) or Merciless (3)
+          schema:
+            type: string
+            enum: [Normal]
+        - name: start
+          in: query
+          description: |
+            Labyrinth only: Timestamp of the ladder you want.
+          schema:
+            type: string
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/pvp-matches:
+    get:
+      summary: Get a list of PvP matches.
+      parameters:
+        - name: type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [season]
+        - name: seasonId
+          in: query
+          description: |
+            Set this to get PvP matches for a particular season. Leave this unset to retrieve all upcoming PvP matches.
+          schema:
+            type: string
+        - name: realm
+          in: query
+          description: |
+            The realm to fetch PvP matches from: pc (default), xbox, or sony
+          schema:
+            $ref: '#/components/schemas/Realms'
+        - name: callback
+          in: query
+          description: |
+            jsonp callback
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/public-stash-tabs:
+    get:
+      summary: Retrieves a list of stashes, accounts, and items as described above in the Introduction section.
+      description: |
+        * https://www.pathofexile.com/developer/docs/api-resource-public-stash-tabs
+        * https://pathofexile.gamepedia.com/Public_stash_tab_API
+      parameters:
+        - name: id
+          in: query
+          description: |
+            The next change ID you recieved from previously fetching changes. Default: 0
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/shop/microtransactions/specials:
+    get:
+      summary: get today special deals
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [active]
+        - name: limit
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: OK
+  /api/trade/data/leagues:
+    get:
+      responses:
+        '200':
+          description: OK
+  /api/trade/data/items:
+    get:
+      responses:
+        '200':
+          description: OK
+  /api/trade/data/stats:
+    get:
+      responses:
+        '200':
+          description: OK
+  /api/trade/data/static:
+    get:
+      responses:
+        '200':
+          description: OK
+  /api/trade/search/{league}:
+    post:
+      summary: trade search function
+      parameters:
+        - name: league
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchSource'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResult'
+  /api/trade/fetch/{items}:
+    get:
+      summary: fetch items using search result
+      parameters:
+        - name: items
+          in: path
+          required: true
+          description: Search Results in ,
+          schema:
+            type: string
+          example: c593ccc98580e892eb0745048a8378927b452070e91da03139a00d450eca7477,e1105792ac87113b20487d7cb2d5b9fd43f40b3bdd8a55780acbaaad513c9b65
+        - name: query
+          in: query
+          description: Search id
+          schema:
+            type: string
+          example: Wqn2LKFm
+      responses:
+        '200':
+          description: OK
+  /api/trade/ignore:
+    get:
+      summary: List ignored trade accounts
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: OK
+  /api/trade/ignore/{account}:
+    put:
+      summary: Ignore a trade account
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: account
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Unignore a trade account
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: account
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/guild/{guildid}/stash/history:
+    get:
+      summary: List guild stash history
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: guildid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          required: false
+          description: unix timestamp
+          schema:
+            type: string
+        - name: fromid
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /ladder/export-csv/league/{league}:
+    get:
+      parameters:
+        - name: league
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Leagues'
+        - name: realm
+          in: query
+          required: true
+          description: |
+            The realm to fetch PvP matches from: pc (default), xbox, or sony
+          schema:
+            $ref: '#/components/schemas/Realms'
+        - name: index
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [1, 2, 3, 4, 6, 7, 8]
+      responses:
+        '200':
+          description: OK

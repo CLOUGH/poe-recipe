@@ -1,0 +1,27 @@
+mat-card {
+  min-width: 300px;
+  margin: 0;
+  mat-card-actions {
+    text-align: right;
+  }
+  mat-card-header{
+    mat-card-title {
+      margin-left: -16px;
+    }
+  }
+  mat-card-header, mat-card-content {
+    margin-bottom: 15px;
+  }
+}
+
+
+mat-form-field {
+  width: 100%;
+}
+
+.stash-checkbox{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  max-height: 60vh;
+  overflow-y: scroll;
+}

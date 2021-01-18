@@ -1,0 +1,152 @@
+/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  height: 100%;
+  background-color: black;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+$rareTextColor: #ff7;
+$gemTextColor: #1ba29b;
+$normalTextColor: #c8c8c8;
+$uniqueTextColor: #af6025;
+$magicTextColor: #88f;
+$currencyTextColor: #aa9e82;
+$enchantedTextColor: #b4b4ff;
+$corruptedTextColor: #d20000;
+.mat-card{
+  background-color: black !important;
+}
+.item-preview-popover {
+  max-width: 600px;
+  min-width: 264px;
+  background: rgba(0, 0, 0, 0.8);
+  margin: 0px 7px;
+  .progress {
+    width: 212px;
+    height: 13px;
+    border-radius: 0px;
+    background: url("assets/images/experience-bar.png");
+    .progress-bar.bg-warning {
+      background: url("assets/images/experience-bar-fill.png");
+      height: 10px;
+      margin: 2px;
+    }
+  }
+  .popover-body {
+    text-align: center;
+    color: #7f7f7f;
+    hr {
+      margin: 5px 0px;
+    }
+    .magic-text {
+      color: $magicTextColor;
+    }
+    .normal-text {
+      color: $normalTextColor;
+    }
+    .text-enchanted {
+      color: $enchantedTextColor;
+    }
+  }
+  .popover-header {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    font-size: 16px;
+    line-height: 1.2;
+    border-bottom: none;
+  }
+  .experience-bar {
+  }
+
+  .properties {
+  }
+  .implicitMods,
+  .explicitMods {
+    color: $magicTextColor;
+  }
+  .arrow {
+    display: none;
+  }
+  &.item-type-0 {
+    .popover-header {
+      background: getItemHeaderBorders("normal");
+      color: $normalTextColor;
+    }
+    .secDescrText,
+    .vaal-name {
+      color: $normalTextColor;
+    }
+    hr {
+      background: getItemSepartor("normal");
+    }
+  }
+  &.item-type-1 {
+    .popover-header {
+      background: getItemHeaderBorders("magic");
+      color: $magicTextColor;
+    }
+  }
+  .secDescrText,
+  .vaal-name {
+    color: $magicTextColor;
+  }
+  hr {
+    background: getItemSepartor("magic");
+  }
+  &.item-type-2 {
+    .popover-header {
+      background: getItemHeaderBorders("double-rare");
+      color: $rareTextColor;
+    }
+    .secDescrText,
+    .vaal-name {
+      color: $rareTextColor;
+    }
+    hr {
+      background: getItemSepartor("rare");
+    }
+  }
+  &.item-type-3 {
+    .popover-header {
+      color: $uniqueTextColor;
+      background: getItemHeaderBorders("double-unique");
+    }
+    .secDescrText,
+    .vaal-name {
+      color: $uniqueTextColor;
+    }
+    hr {
+      background: getItemSepartor("unique");
+    }
+  }
+  &.item-type-4 {
+    .popover-header {
+      color: $gemTextColor;
+      background: getItemHeaderBorders("gem");
+    }
+    .secDescrText,
+    .vaal-name {
+      color: $gemTextColor;
+    }
+    hr {
+      background: getItemSepartor("gem");
+    }
+  }
+  &.item-type-5 {
+    .popover-header {
+      color: $currencyTextColor;
+      background: getItemHeaderBorders("currency");
+    }
+    .secDescrText,
+    .vaal-name {
+      color: $currencyTextColor;
+    }
+    hr {
+      background: getItemSepartor("currency");
+    }
+  }
+}
