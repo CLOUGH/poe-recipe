@@ -25,3 +25,7 @@ mat-form-field {
   max-height: 60vh;
   overflow-y: scroll;
 }
+
+:host ::ng-deep .mat-tab-body-wrapper {
+  padding-top: 30px;
+}

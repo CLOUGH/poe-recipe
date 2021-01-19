@@ -13,6 +13,8 @@ import { WebviewDirective } from './directives/';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StashTabComponent } from './components/stash-tab/stash-tab.component';
 import { SettingsDialogComponent } from './components/settings-dialog/settings-dialog.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ErrorDetailDialogComponent } from './components/error-detail-dialog/error-detail-dialog.component';
 
 
 @NgModule({
@@ -20,7 +22,8 @@ import { SettingsDialogComponent } from './components/settings-dialog/settings-d
     PageNotFoundComponent,
     WebviewDirective,
     StashTabComponent,
-    SettingsDialogComponent
+    SettingsDialogComponent,
+    ErrorDetailDialogComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +34,8 @@ import { SettingsDialogComponent } from './components/settings-dialog/settings-d
     MatSelectModule,
     MatCardModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTabsModule
   ],
   exports: [
     TranslateModule,
@@ -39,7 +43,8 @@ import { SettingsDialogComponent } from './components/settings-dialog/settings-d
     FormsModule,
     SettingsDialogComponent,
     StashTabComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ErrorDetailDialogComponent
   ]
 })
 export class SharedModule { }

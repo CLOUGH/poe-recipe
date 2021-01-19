@@ -5,4 +5,5 @@ export interface Settings {
   activeCharacter?: Character;
   accountName?: string;
   selectedTabIds?: string[];
+  poeApiRefreshRate?: number;
 }

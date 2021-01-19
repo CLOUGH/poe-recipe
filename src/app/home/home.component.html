@@ -2,10 +2,10 @@
   <mat-icon>settings</mat-icon>
 </button>
 <button color="accent" mat-icon-button class="settings-btn" (click)="refersh()">
-  <mat-icon>refresh</mat-icon>
+  <mat-icon [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
 </button>
-
 <div class="container">
+  
   
 
   <mat-card class="mat-elevation-z8">
@@ -29,19 +29,18 @@
         <form [formGroup]="searchForm">
           <mat-form-field class="example-full-width">
             <mat-label>Min Item Level</mat-label>
-            <input matInput type="numnber" min="0" max="100" formControlName="minItemLevel">
+            <input matInput type="number" min="0" max="100" formControlName="minItemLevel">
           </mat-form-field>
           <mat-form-field class="example-full-width">
             <mat-label>Max Item Level</mat-label>
-            <input matInput type="numnber" min="0" max="100" formControlName="maxItemLevel">
+            <input matInput type="number" min="0" max="100" formControlName="maxItemLevel">
           </mat-form-field>
         </form>
       </div>
       
     </mat-card-content>
     
-    <mat-tab-group color="accent" mat-align-tabs="start" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event)">
-      
+    <mat-tab-group color="accent" mat-align-tabs="start" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChanged($event)"  [@.disabled]="true">      
       <mat-tab  [label]="stashTab.currentTab.n" *ngFor="let stashTab of selectedStashes;index as i" [disabled]="!stashContainsSelectedSet(i)">
         <app-stash-tab [stashTab]="stashTab" *ngIf="i===selectedTabIndex"
           [highlightedItemIndex]="this.getHighLightedItems(i)"></app-stash-tab>

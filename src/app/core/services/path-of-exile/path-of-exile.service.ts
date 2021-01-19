@@ -1,9 +1,8 @@
 import { StashTab } from './../../models/stash-tab';
 import { SettingsService } from './../settings.service';
-import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
 import { ElectronService } from './../electron/electron.service';
 import { Character } from './../../models/character';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({

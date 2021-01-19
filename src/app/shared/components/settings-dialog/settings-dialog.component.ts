@@ -25,6 +25,13 @@ export class SettingsDialogComponent implements OnInit {
     this.settings = this.settingsService.getSettings();
     this.onPoeSessionIdChange(this.settings.poeSessionId);
     this.activeCharacterName = this.settings.activeCharacter.name;
+
+    if(!this.settings || !this.settings.poeSessionId) {
+      this.settings = {
+        ...this.settings,
+        poeApiRefreshRate: 60
+      }
+    }
   }
 
   onPoeSessionIdChange(poeSessionId) {

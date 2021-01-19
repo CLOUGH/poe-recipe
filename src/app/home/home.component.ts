@@ -8,11 +8,10 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { SettingsDialogComponent } from '../shared/components/settings-dialog/settings-dialog.component';
 import { MatSnackBar, MatSnackBarRef, TextOnlySnackBar } from '@angular/material/snack-bar';
-import { combineLatest, forkJoin, of } from 'rxjs';
+import { combineLatest, config, forkJoin, interval, Observable, of, Subscription } from 'rxjs';
 import { switchMap, map, mergeMap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
-
-
+import { ErrorDetailDialogComponent } from '../shared/components/error-detail-dialog/error-detail-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,10 @@ export class HomeComponent implements OnInit {
   searchForm = new FormGroup({
     minItemLevel: new FormControl(0),
     maxItemLevel: new FormControl(0)
-  })
+  });
+  refreshing = false;
+  refreshInterval: Subscription;
+  refreshRate = 60000;
 
   constructor(private router: Router, public dialog: MatDialog, private snackBar: MatSnackBar, private poeService: PathOfExileService, private settingsService: SettingsService) { }
 
@@ -40,10 +42,21 @@ export class HomeComponent implements OnInit {
     this.refersh();
   }
 
-  refersh() {
+  async refersh() {
     this.settings = this.settingsService.getSettings();
     this.onPoeSessionIdUpdated();
-    this.getStashTabs();
+    await this.getStashTabs();
+
+    if(this.refreshInterval) {
+      this.refreshInterval.unsubscribe();
+    }
+    
+    console.log(this.settings);
+    this.refreshRate = (this.settings.poeApiRefreshRate || 60) * 1000;
+    this.refreshInterval = interval(this.refreshRate).subscribe(() => {
+      this.getStashTabs();
+      console.log("Refreshed", this.settings.poeApiRefreshRate);
+    });
 
     this.searchForm.valueChanges.subscribe((searchValue) => {
       this.search = searchValue;
@@ -61,9 +74,11 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getStashTabs() {
+  async getStashTabs() {
     if (this.settings && this.settings.accountName && this.settings.activeCharacter && this.settings.selectedTabIds && this.settings.selectedTabIds.length > 0) {
-      this.poeService.getStash(0, this.settings.accountName, this.settings.activeCharacter.league, true)
+      
+      this.refreshing = true;
+      return this.poeService.getStash(0, this.settings.accountName, this.settings.activeCharacter.league, true)
         .pipe(
           mergeMap(stash => {
             const selectTabs = stash.tabs
@@ -83,17 +98,29 @@ export class HomeComponent implements OnInit {
         .subscribe(stashes => {
           this.selectedStashes = stashes;
           this.chaosSetItems = this.getItemChaosRecipeItems(stashes);
-          console.log(this.chaosSetItems);
+          
+          this.refreshing = false;
+        }, (error) => {
+          const errorSnackBar = this.snackBar.open(`An error has occured while trying to retrieve pull your stash.`, 'More Info');
+          errorSnackBar.onAction().subscribe(() => this.openErrorDetailsModal(error));
+          this.refreshing = true;
         });
     }
+    return Promise.resolve();
+  }
 
+  openErrorDetailsModal(error) {
+    const dialogRef = this.dialog.open(ErrorDetailDialogComponent,{
+      data: {error}
+    });
   }
 
   openSettings() {
-    const dialogRef = this.dialog.open(SettingsDialogComponent)
+    const dialogRef = this.dialog.open(SettingsDialogComponent, {
+      width: '600px',
+    })
       .afterClosed().subscribe(() => {
-        this.onPoeSessionIdUpdated();
-        this.getStashTabs();
+        this.refersh();
       });
   }
 
@@ -242,7 +269,6 @@ export class HomeComponent implements OnInit {
         chaosSets[chaosSets.length - 1].leftWeapon = chaosItem;
       }
     }
-    console.log({chaosSets});
     return chaosSets;
   }
 
@@ -391,7 +417,6 @@ export class HomeComponent implements OnInit {
         
       });
     }
-    console.log(selectedItems);
     return selectedItems;
   }
 

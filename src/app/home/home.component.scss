@@ -33,3 +33,17 @@ pre {
     margin-right: 15px;
   }
 }
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.spinning {
+  animation: rotation 2s infinite linear;
+
+}
