@@ -1,12 +1,7 @@
 :host {
 
 }
-.settings-btn {
-  float: right;
-}
 .container {
-  clear: both;
-  padding: 15px;
 }
 
 pre {
@@ -15,15 +10,16 @@ pre {
 }
 
 .stash-tabs-container {
-  min-height: 80vh;
+  min-height: 70vh;
 }
 
 .chaos-set-items {
-  margin-top: 15px !important;
+  // margin-top: 15px !important;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   mat-radio-button {
+    font-size: 12px;
     padding-left: 15px;
   }
 }
@@ -46,4 +42,46 @@ pre {
 .spinning {
   animation: rotation 2s infinite linear;
 
+}
+
+.chaos-items-stats {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-evenly;
+}
+mat-card-header {
+  width: 100%;
+}
+
+.action-bar {
+  display: flex;
+  justify-content: space-between;
+  mat-radio-group {
+    display: block !important;
+  }
+  
+}
+.settings-btn {
+  margin-top: -10px;
+}
+
+.chaos-items-stats button {
+  font-size: 12px;
+}
+
+
+:host ::ng-deep .mat-tab-label.mat-tab-disabled {
+  color: rgb(115 115 115 / 50%);
+}
+:host ::ng-deep .mat-tab-label {
+  color: rgba($color: white, $alpha: 1.0)
+}
+
+mat-card {
+  background-color: black;
+}
+
+.no-completed-notification {
+  font-size: 10px;
+  text-align: center;
 }

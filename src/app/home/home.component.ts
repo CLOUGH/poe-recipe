@@ -1,4 +1,5 @@
 import { ChaosSet, ChaosItem, Recipe } from './../core/models/chaos-set';
+import {ChaosSetStat} from './../core/models/chaos-set-stat';
 import { StashTab, Item } from './../core/models/stash-tab';
 import { Settings } from './../core/models/settings';
 import { SettingsService } from './../core/services/settings.service';
@@ -35,14 +36,16 @@ export class HomeComponent implements OnInit {
   refreshing = false;
   refreshInterval: Subscription;
   refreshRate = 60000;
+  chaosSetItemsStat: ChaosSetStat;
+  itemTypeSelected: string;
 
   constructor(private router: Router, public dialog: MatDialog, private snackBar: MatSnackBar, private poeService: PathOfExileService, private settingsService: SettingsService) { }
 
   ngOnInit(): void {
-    this.refersh();
+    this.refresh();
   }
 
-  async refersh() {
+  async refresh() {
     this.settings = this.settingsService.getSettings();
     this.onPoeSessionIdUpdated();
     await this.getStashTabs();
@@ -97,16 +100,94 @@ export class HomeComponent implements OnInit {
         )
         .subscribe(stashes => {
           this.selectedStashes = stashes;
-          this.chaosSetItems = this.getItemChaosRecipeItems(stashes);
+          this.chaosSetItems = this.getItemChaosRecipeItems(stashes);         
           
           this.refreshing = false;
         }, (error) => {
           const errorSnackBar = this.snackBar.open(`An error has occured while trying to retrieve pull your stash.`, 'More Info');
           errorSnackBar.onAction().subscribe(() => this.openErrorDetailsModal(error));
-          this.refreshing = true;
+          this.refreshing = false;
         });
     }
     return Promise.resolve();
+  }
+  updateChaosSetStat(chaosItems: ChaosItem[]) {
+    
+    this.chaosSetItemsStat = {
+      bodyArmour: {
+        count: 0,
+        items: []
+      },
+      boot: {
+        count: 0,
+        items: []
+      },
+      gloves: {
+        count: 0,
+        items: []
+      },
+      helmet: {
+        count: 0,
+        items: []
+      },
+      ring:  {
+        count: 0,
+        items: []
+      },
+      weapon:  {
+        count: 0,
+        items: []
+      },      
+      belt:  {
+        count: 0,
+        items: []
+      },
+      amulet: {
+        count: 0,
+        items: []
+      }
+
+    };
+
+    chaosItems.forEach((chaosItem, index) => {
+      
+      if(this.getItemCategory(chaosItem.item) === 'Amulets'){
+        this.chaosSetItemsStat.amulet.count++;
+        this.chaosSetItemsStat.amulet.items.push(chaosItem);
+      }
+      if(this.getItemCategory(chaosItem.item)=== 'Rings'){
+        this.chaosSetItemsStat.ring.count++;
+        this.chaosSetItemsStat.ring.items.push(chaosItem);
+      }
+      if(this.getItemType(chaosItem.item)=== 'Helmets'){
+        this.chaosSetItemsStat.helmet.count++;
+        this.chaosSetItemsStat.helmet.items.push(chaosItem);
+      }
+      if(this.getItemCategory(chaosItem.item)=== 'Belts'){
+        this.chaosSetItemsStat.belt.count++;
+        this.chaosSetItemsStat.belt.items.push(chaosItem);
+      }
+      if(this.getItemType(chaosItem.item)=== 'Gloves'){
+        this.chaosSetItemsStat.gloves.count++;
+        this.chaosSetItemsStat.gloves.items.push(chaosItem);
+      }
+      if(this.getItemType(chaosItem.item)=== 'Boots'){
+        this.chaosSetItemsStat.boot.count++;
+        this.chaosSetItemsStat.boot.items.push(chaosItem);
+      }
+      if(this.getItemType(chaosItem.item)=== 'BodyArmours'){
+        this.chaosSetItemsStat.bodyArmour.count++;
+        this.chaosSetItemsStat.bodyArmour.items.push(chaosItem);
+      }
+      if(this.getItemCategory(chaosItem.item)=== 'Shields'){
+        this.chaosSetItemsStat.weapon.count++;
+        this.chaosSetItemsStat.weapon.items.push(chaosItem);
+      }
+      if(this.getItemCategory(chaosItem.item)=== 'Weapons'){
+        this.chaosSetItemsStat.weapon.count++;
+        this.chaosSetItemsStat.weapon.items.push(chaosItem);
+      }
+    });
   }
 
   openErrorDetailsModal(error) {
@@ -120,8 +201,19 @@ export class HomeComponent implements OnInit {
       width: '600px',
     })
       .afterClosed().subscribe(() => {
-        this.refersh();
+        this.refresh();
       });
+  }
+
+  getCompletedChaosSet() {
+    return this.chaosSetItems ?  this.chaosSetItems.filter(chaosSetItem => chaosSetItem.isComplete===true): [];
+  }
+
+  toggleSelectedSet( selectedSetIndex, event) {
+    if(selectedSetIndex === this.selectedSetIndex) {
+      this.selectedSetIndex = null;
+      event.preventDefault();
+    }
   }
 
   getItemChaosRecipeItems(stashes: StashTab[]) {
@@ -140,6 +232,7 @@ export class HomeComponent implements OnInit {
         });
       }
     });
+    this.updateChaosSetStat(chaosItems);
 
     let chaosSets: ChaosSet[] = [];
     while (chaosItems.length > 0) {
@@ -228,6 +321,7 @@ export class HomeComponent implements OnInit {
 
         chaosSet.isComplete = this.getIsChaosSetComplete(chaosSet);
         if (itemSlotted) {
+
           break;
         }
       }
@@ -345,8 +439,14 @@ export class HomeComponent implements OnInit {
 
   getHighLightedItems(stashIndex: number) {
     let selectedItems = []
-
-    if(this.currentMode === 'chaos'){
+    if(this.itemTypeSelected){
+      this.chaosSetItemsStat[this.itemTypeSelected].items.forEach((item:ChaosItem) => {
+        if(item.selectedStashIndex===stashIndex) {
+          selectedItems.push(item.selectedItemIndex);
+        }
+      });
+    }
+    else if(this.currentMode === 'chaos'){
       this.chaosSetItems.filter((chaosSetItem, index) => index===this.selectedSetIndex)
         .forEach(chaosSetItem => {
           if (chaosSetItem.amulet && chaosSetItem.amulet.selectedStashIndex === stashIndex) {
@@ -382,7 +482,7 @@ export class HomeComponent implements OnInit {
   
         });
     }
-    if(this.currentMode === 'search') {
+    else if(this.currentMode === 'search') {
       this.selectedStashes[this.selectedTabIndex].items.forEach((item,index) => {
         let showItem = true;
         
@@ -434,5 +534,14 @@ export class HomeComponent implements OnInit {
 
   onTabChanged(stashIndex) {
     this.highLightedItemsIndex = this.getHighLightedItems(stashIndex);
+  }
+
+  toggleHighlightItemType(type) {
+    this.selectedSetIndex = null;
+    if(this.itemTypeSelected === type){
+      this.itemTypeSelected = null;
+    } else{
+      this.itemTypeSelected = type;
+    }
   }
 }
