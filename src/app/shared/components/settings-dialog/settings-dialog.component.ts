@@ -114,4 +114,8 @@ export class SettingsDialogComponent implements OnInit {
     this.electronService.shell.openExternal(url);
   }
 
+  openDeveloperTool(){
+    this.electronService.remote.getCurrentWebContents().openDevTools();
+  }
+
 }

@@ -46,11 +46,13 @@
           <p>Author: Warren Clough</p>
           <p>Created: 2021</p>
           <p>Version: {{appVersion}}</p>
-          <br>
-          <button mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe/releases')">Download Latest Release</button>
-          <button mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe')" >Github Page</button>
+          <br/>
+          <h4 *ngIf="isOutdated" class="outdated-message">This version of the application is outdated. Download the latest release</h4>
+          <button color="accent" mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe/releases')">Download Latest Release</button>
+          <button color="accent" mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe')" >Github Page</button>
+          <button color="accent" mat-button (click)="openDeveloperTool()" >Developer Tools</button>
 
-          <h1 *ngIf="isOutdated">This version of the application is outdated. Download the latest release</h1>
+
         </mat-tab>
       </mat-tab-group>
 
