@@ -13,7 +13,8 @@ import { combineLatest, config, forkJoin, interval, Observable, of, Subscription
 import { switchMap, map, mergeMap } from 'rxjs/operators';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ErrorDetailDialogComponent } from '../shared/components/error-detail-dialog/error-detail-dialog.component';
-import { AppReleaseService } from '../core/services';
+import { AppReleaseService, ChaosRecipeService } from '../core/services';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-home',
@@ -41,13 +42,15 @@ export class HomeComponent implements OnInit {
   itemTypeSelected: string;
   isOutdated = false;
 
+
   constructor(
     private router: Router,
     public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private poeService: PathOfExileService,
     private settingsService: SettingsService,
-    private appReleaseService: AppReleaseService
+    private appReleaseService: AppReleaseService,
+    private chaosRecipeService: ChaosRecipeService,
   ) { }
 
   ngOnInit(): void {
@@ -61,20 +64,21 @@ export class HomeComponent implements OnInit {
   async refresh() {
     this.settings = this.settingsService.getSettings();
     this.poeService.setPoeSessionIdCookie(this.settings && this.settings.poeSessionId);
+
     setTimeout(() => {
-      this.onPoeSessionIdUpdated();
-      
-      this.getStashTabs();
-      
+      this.onPoeSessionIdUpdated();      
+      this.getStashTabs();      
   
       if (this.refreshInterval) {
         this.refreshInterval.unsubscribe();
       }
-      this.refreshRate = (this.settings.poeApiRefreshRate || 60) * 1000;
-      this.refreshInterval = interval(this.refreshRate).subscribe(() => {
-        this.getStashTabs();
-        console.log("Refreshed", this.settings.poeApiRefreshRate);
-      });
+      
+      if(this.settings.enableAutoRefresh===true){
+        this.refreshRate = (this.settings.poeApiRefreshRate || 60) * 1000;
+        this.refreshInterval = interval(this.refreshRate).subscribe(() => {
+          this.getStashTabs();
+        });
+      }
   
       this.searchForm.valueChanges.subscribe((searchValue) => {
         this.search = searchValue;
@@ -165,9 +169,9 @@ export class HomeComponent implements OnInit {
       }
 
     };
-
+    
     chaosItems.forEach((chaosItem, index) => {
-
+      
       if (this.getItemCategory(chaosItem.item) === 'Amulets') {
         this.chaosSetItemsStat.amulet.count++;
         this.chaosSetItemsStat.amulet.items.push(chaosItem);
@@ -205,6 +209,7 @@ export class HomeComponent implements OnInit {
         this.chaosSetItemsStat.weapon.items.push(chaosItem);
       }
     });
+
   }
 
   openErrorDetailsModal(error) {
@@ -233,6 +238,8 @@ export class HomeComponent implements OnInit {
       this.selectedSetIndex = null;
       event.preventDefault();
     }
+
+    this.updateHighlightedItems(this.selectedTabIndex);
   }
 
   getItemChaosRecipeItems(stashes: StashTab[]) {
@@ -482,7 +489,7 @@ export class HomeComponent implements OnInit {
   }
 
 
-  getHighLightedItems(stashIndex: number) {
+  updateHighlightedItems(stashIndex: number) {
     let selectedItems = []
     if (this.itemTypeSelected) {
       this.chaosSetItemsStat[this.itemTypeSelected].items.forEach((item: ChaosItem) => {
@@ -491,46 +498,8 @@ export class HomeComponent implements OnInit {
         }
       });
     }
-    else if (this.currentMode === 'chaos') {
-      this.chaosSetItems.filter((chaosSetItem, index) => index === this.selectedSetIndex)
-        .forEach((chaosSetItem, index) => {
-          if (chaosSetItem.amulet && chaosSetItem.amulet.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.amulet.selectedItemIndex);
-          }
-          if (chaosSetItem.belt && chaosSetItem.belt.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.belt.selectedItemIndex);
-          }
-          if (chaosSetItem.bodyArmour && chaosSetItem.bodyArmour.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.bodyArmour.selectedItemIndex);
-          }
-          if (chaosSetItem.boots && chaosSetItem.boots.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.boots.selectedItemIndex);
-          }
-          if (chaosSetItem.gloves && chaosSetItem.gloves.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.gloves.selectedItemIndex);
-          }
-          if (chaosSetItem.head && chaosSetItem.head.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.head.selectedItemIndex);
-          }
-          if (chaosSetItem.leftRing && chaosSetItem.leftRing.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.leftRing.selectedItemIndex);
-          }
-          if (chaosSetItem.rightRing && chaosSetItem.rightRing.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.rightRing.selectedItemIndex);
-          }
-          if (chaosSetItem.rightWeapon && chaosSetItem.rightWeapon.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.rightWeapon.selectedItemIndex);
-            if(index===0){
-              console.log({right: chaosSetItem.rightWeapon})
-            }
-          }
-          if (chaosSetItem.leftWeapon && chaosSetItem.leftWeapon.selectedStashIndex === stashIndex) {
-            selectedItems.push(chaosSetItem.leftWeapon.selectedItemIndex);
-            if(index===0){
-              console.log({left: chaosSetItem.leftWeapon})
-            }
-          }
-        });
+    else if (this.currentMode === 'chaos' && this.selectedSetIndex>=0 && stashIndex>=0 && this.chaosSetItems[this.selectedSetIndex] && this.selectedStashes[stashIndex]) {
+      selectedItems = this.chaosRecipeService.getHighlightedItemsIndex(this.selectedStashes[stashIndex],stashIndex, this.chaosSetItems[this.selectedSetIndex]);
     }
     else if (this.currentMode === 'search') {
       this.selectedStashes[this.selectedTabIndex].items.forEach((item, index) => {
@@ -563,27 +532,26 @@ export class HomeComponent implements OnInit {
         if (showItem === true) {
           selectedItems.push(index);
         }
-
-
       });
     }
-    return selectedItems;
+    this.highLightedItemsIndex = selectedItems;
   }
 
   stashContainsSelectedSet(stashIndex: number) {
-    const highLightedItems: ChaosItem[] = this.getHighLightedItems(stashIndex);
     if (this.selectedSetIndex === null || this.selectedSetIndex === undefined) {
       return true;
     }
-    if (highLightedItems.length === 0) {
-      return false;
+    if (this.selectedSetIndex>=0 && stashIndex>=0) {
+      return this.chaosRecipeService.getHighlightedItemsIndex(this.selectedStashes[stashIndex], stashIndex, this.chaosSetItems[this.selectedSetIndex]).length>0;
     }
 
     return true;
   }
 
-  onTabChanged(stashIndex) {
-    this.highLightedItemsIndex = this.getHighLightedItems(stashIndex);
+  onTabChanged(stashIndex: MatTabChangeEvent) {
+    this.highLightedItemsIndex = [];
+    this.updateHighlightedItems(stashIndex.index);
+
   }
 
   toggleHighlightItemType(type) {
@@ -593,5 +561,15 @@ export class HomeComponent implements OnInit {
     } else {
       this.itemTypeSelected = type;
     }
+
+    this.updateHighlightedItems(this.selectedTabIndex);
+  }
+
+  onSelectedSetChanged(setIndex) {
+    this.selectedSetIndex = setIndex;
+    if(setIndex>=0){
+      this.updateHighlightedItems(this.selectedTabIndex);
+    }
+
   }
 }

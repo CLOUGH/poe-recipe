@@ -6,4 +6,5 @@ export interface Settings {
   accountName?: string;
   selectedTabIds?: string[];
   poeApiRefreshRate?: number;
+  enableAutoRefresh?: boolean;
 }

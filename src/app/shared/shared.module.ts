@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { PageNotFoundComponent } from './components/';
@@ -16,6 +17,7 @@ import { StashTabComponent } from './components/stash-tab/stash-tab.component';
 import { SettingsDialogComponent } from './components/settings-dialog/settings-dialog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorDetailDialogComponent } from './components/error-detail-dialog/error-detail-dialog.component';
+import { ItemPopoverComponent } from './components/item-popover/item-popover.component';
 
 
 
@@ -25,7 +27,8 @@ import { ErrorDetailDialogComponent } from './components/error-detail-dialog/err
     WebviewDirective,
     StashTabComponent,
     SettingsDialogComponent,
-    ErrorDetailDialogComponent
+    ErrorDetailDialogComponent,
+    ItemPopoverComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +41,8 @@ import { ErrorDetailDialogComponent } from './components/error-detail-dialog/err
     MatCheckboxModule,
     ReactiveFormsModule,
     MatTabsModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatProgressBarModule
   ],
   exports: [
     TranslateModule,

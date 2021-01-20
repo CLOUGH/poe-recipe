@@ -13,15 +13,19 @@ img.stash-grid{
   object-fit: contain;
 
 }
-.item {
+.stash-box {
   position: absolute;
-  &.identified{
-    background-color: rgba(25,26,150,0.25);
+  img {
+    &.identified{
+      background-color: rgba(25,26,150,0.25);
+    }
+    &.unidentified {
+      background-color: rgba(210,0,0,0.18)
+    }
+    height: inherit;
   }
-  &.unidentified {
-    background-color: rgba(210,0,0,0.18)
+
   }
-}
 .highlight {
   box-shadow: inset 1px 1px 5px black;
   background-color: rgba($color: #69f0ae, $alpha: 0.5) !important;

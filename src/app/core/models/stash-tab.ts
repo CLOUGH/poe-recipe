@@ -46,12 +46,18 @@ export interface Item {
   league?: string;
   name?: string;
   properties?: ItemProperty[];
+  additionalProperties?: ItemProperty[];
   requirements: ItemRequirement[];
   socketedItems: any[];
   sockets: [{group: 0, attr: "D", sColour: "G"}];
   typeLine?: string;
   verified?: boolean;
   synthesised?: boolean;
+  secDescrText?: string;
+  corrupted?: boolean;
+  hybrid?: HybridDetail;
+  utilityMods?: string[];
+  enchantMods?: string[];
   w?: number;
   x?: number;
   y?: number;
@@ -59,8 +65,9 @@ export interface Item {
 export interface ItemProperty {
   displayMode?: number;
   name?: string;
-  type?: string;
+  type?: number;
   values?: any[];
+  progress?: number;
 }
 
 export interface ItemRequirement {
@@ -73,4 +80,16 @@ export interface ItemSocket {
   attr?: string;
   group?: number;
   sColour?: string;
+}
+
+
+export interface HybridDetail {
+  isVaalGem?: boolean;
+  baseTypeName: string;
+  properties?: ItemProperty[];
+  explicitMods?: string[];
+  utilityMods?: string[];
+  enchantMods?: string[];
+  implicitMods?: string[];
+  secDescrText?: string;
 }

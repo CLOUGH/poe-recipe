@@ -40,7 +40,8 @@ export class SettingsDialogComponent implements OnInit {
     if (!this.settings || !this.settings.poeSessionId) {
       this.settings = {
         ...this.settings,
-        poeApiRefreshRate: 60
+        poeApiRefreshRate: this.settings.poeApiRefreshRate || 60,
+        enableAutoRefresh: this.settings.enableAutoRefresh ||  true,
       }
     }
 

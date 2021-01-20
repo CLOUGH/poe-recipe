@@ -1,0 +1,131 @@
+<mat-card [class]="'item-type-'+item.frameType">
+    <div class="title" >
+        <div *ngIf="item.hybrid">{{item.hybrid.baseTypeName}}</div>
+        <div *ngIf="!item.hybrid">{{item.typeLine}}</div>
+        <div>{{item.name}}</div>
+    </div>
+    <div class="content">
+        <div *ngIf="item.properties" class="properties">
+            <div *ngFor="let property of item.properties; let i=index">
+                <span>{{property.name}}<span *ngIf="property.type">:</span></span>
+                <span *ngIf="property.type">
+                    <span>{{property.values[0][0]}}</span>
+                </span>
+            </div>
+        </div>
+        <div>
+            <span>Item Level: </span> <span>{{item.ilvl}}</span>
+        </div>
+
+
+        <div *ngIf="item.utilityMods" class="utilityMods">
+            <div *ngFor="let utilityMod of item.utilityMods">
+                <div [innerHTML]="utilityMod"></div>
+            </div>
+        </div>
+        <div *ngIf="item.requirements" class="requirements">
+            <hr>
+            <span *ngFor="let requirement of item.requirements; let i=index">
+                <span *ngIf="requirement.displayMode===0">
+                    <span>{{ requirement.name }}</span>
+                    <span>{{requirement.values[0][0]}}</span>
+                </span>
+                <span *ngIf="requirement.displayMode===1">
+                    <span>{{requirement.values[0][0]}}</span>
+                    <span>{{ requirement.name }}</span>
+                </span>
+                <span *ngIf="i< item.requirements.length-1">,</span>
+            </span>
+        </div>
+        <div *ngIf="item.secDescrText" class="secDescrText">
+            <hr>
+            <span>{{item.secDescrText}}</span>
+        </div>
+
+        <div *ngIf="item.enchantMods" class="enchantMods">
+            <hr>
+            <div *ngFor="let enchantMod of item.enchantMods; let i=index">
+                <span class="text-enchanted">{{enchantMod}}</span>
+            </div>
+        </div>
+
+
+        <div *ngIf="item.implicitMods" class="implicitMods">
+            <hr>
+            <div *ngFor="let implicitMod of item.implicitMods; let i=index">
+                <span>{{implicitMod }}</span>
+            </div>
+        </div>
+
+        <div *ngIf="item.explicitMods" class="explicitMods">
+            <hr>
+            <div *ngFor="let explicitMod of item.explicitMods; let i=index" class="explicitMod">
+                <span>{{explicitMod }}</span>
+            </div>
+        </div>
+
+
+
+        <div *ngIf="item.hybrid">
+
+            <div>
+                <hr>
+                <h5 class="vaal-name">{{item.typeLine}}</h5>
+            </div>
+            <div *ngIf="item.hybrid.properties" class="properties">
+                <hr>
+                <div *ngFor="let property of item.hybrid.properties; let i=index">
+                    <div [innerHTML]="property "></div>
+                </div>
+            </div>
+            <div *ngIf="item.hybrid.utilityMods" class="utilityMods">
+                <hr>
+                <div *ngFor="let utilityMod of item.hybrid.utilityMods">
+                    <div [innerHTML]="utilityMod "></div>
+                </div>
+            </div>
+            <div *ngIf="item.hybrid.secDescrText" class="secDescrText">
+                <hr>
+                <span>{{item.hybrid.secDescrText}}</span>
+            </div>
+            <div *ngIf="item.hybrid.enchantMods" class="enchantMods">
+                <hr>
+                <div *ngFor="let enchantMod of item.hybrid.enchantMods; let i=index">
+                    <span class="text-enchanted">{{enchantMod}}</span>
+                </div>
+            </div>
+            <div *ngIf="item.hybrid.implicitMods" class="implicitMods">
+                <hr>
+                <div *ngFor="let implicitMod of item.hybrid.implicitMods; let i=index">
+                    <span>{{implicitMod}}</span>
+                </div>
+            </div>
+
+            <div *ngIf="item.hybrid.explicitMods" class="explicitMods">
+                <hr>
+                <div *ngFor="let explicitMod of item.hybrid.explicitMods; let i=index" class="explicitMod">
+                    <span>{{explicitMod}}</span>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="item.corrupted">
+            <hr>
+            <span class="text-corrupted">Corrupted</span>
+        </div>
+        <div *ngIf="item.additionalProperties">
+            <hr>
+            <div *ngFor="let additionalProperty of item.additionalProperties">
+                <div class="d-flex justify-content-center">
+                    <span *ngIf="additionalProperty.type === 20" class="experience-bar mr-2 pt-2">
+                        <mat-progress-bar mode="determinate" type="warning" [value]="additionalProperty.progress*100">
+                        </mat-progress-bar>
+                    </span>
+
+                </div>
+            </div>
+        </div>
+        <div *ngIf="item.descrText">
+            {{item.descrText}}
+        </div>
+    </div>
+</mat-card>

@@ -11,6 +11,7 @@ import { debounceTime } from 'rxjs/operators';
 export class StashTabComponent implements OnInit, AfterViewInit {
   stashContainerHeight: number;
   stashPanelSize: number;
+  popoverItemIndex: number;
 
   @Input()
   public stashTab: StashTab;
@@ -25,6 +26,8 @@ export class StashTabComponent implements OnInit, AfterViewInit {
   onResize() {
     this.onResizeStashPanel();
   }
+
+  
   constructor() {}
 
   ngOnInit(): void {
@@ -64,6 +67,13 @@ export class StashTabComponent implements OnInit, AfterViewInit {
   isItemHighlighted(itemIndex){
     return this.highlightedItemIndex && this.highlightedItemIndex.findIndex(highLightIndex =>highLightIndex ===itemIndex)>=0;
 
+  }
+
+  showItemPopover(itemIndex: number){
+    this.popoverItemIndex = itemIndex;
+  }
+  hidePopoverItem(itemIndex: number){
+    this.popoverItemIndex = null;
   }
 
 }

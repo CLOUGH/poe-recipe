@@ -1,0 +1,159 @@
+@function getItemHeaderBorders($type) {
+    @return url("/assets/images/header-#{$type}-left.png") top left no-repeat,
+        url("/assets/images/header-#{$type}-right.png") top right no-repeat,
+        url("/assets/images/header-#{$type}-middle.png");
+}
+
+@function getItemSeparator($type) {
+    @return url("/assets/images/separator-#{$type}.png") center no-repeat;
+}
+
+$rareTextColor: #ff7;
+$gemTextColor: #1ba29b;
+$normalTextColor: #c8c8c8;
+$uniqueTextColor: #af6025;
+$magicTextColor: #88f;
+$currencyTextColor: #aa9e82;
+$enchantedTextColor: #b4b4ff;
+$corruptedTextColor: #d20000;
+
+.item-container {
+    height: 100%;
+    width: 100%;
+    &.identified {
+        background-color: rgba(25, 26, 150, 0.25);
+    }
+    &.unidentified {
+        background-color: rgba(210, 0, 0, 0.18);
+    }
+    .vertical-align-helper {
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+    }
+    img {
+        vertical-align: middle;
+    }
+}
+
+:host {
+    position: fixed;
+    z-index: 2;
+    text-align: center;
+}
+
+mat-card {
+    max-width: 600px;
+    min-width: 264px;
+    background: rgba(0, 0, 0, 0.8);
+    margin: 0px 7px;
+    padding: 0;
+    line-height: 1.4;
+    .title {
+        font-size: 19px;
+        line-height: 1em;
+        height: 33px;
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .double-line{
+        height: 53px;
+    }
+    .content {
+        padding: 15px;
+    }
+    hr {
+        border: none;
+        height: 2px;
+    }
+    .implicitMods,
+    .explicitMods {
+        color: $magicTextColor;
+    }
+
+    &.item-type-0 {
+        .title {
+            background: getItemHeaderBorders("normal");
+            color: $normalTextColor;
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $normalTextColor;
+        }
+        hr {
+            background: getItemSeparator("normal");
+        }
+    }
+
+    &.item-type-1 {
+        .title {
+            background: getItemHeaderBorders("magic");
+            color: $magicTextColor;
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $magicTextColor;
+        }
+        hr {
+            background: getItemSeparator("magic");
+        }
+    }
+    &.item-type-2 {
+        .title {
+            background: getItemHeaderBorders("double-rare");
+            color: $rareTextColor;            
+            height: 53px;
+
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $rareTextColor;
+        }
+        hr {
+            background: getItemSeparator("rare");
+        }
+    }
+    &.item-type-3 {
+        .title {
+            color: $uniqueTextColor;
+            background: getItemHeaderBorders("double-unique");
+            height: 53px;
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $uniqueTextColor;
+        }
+        hr {
+            background: getItemSeparator("unique");
+        }
+    }
+    &.item-type-4 {
+        .title {
+            color: $gemTextColor;
+            background: getItemHeaderBorders("gem");
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $gemTextColor;
+        }
+        hr {
+            background: getItemSeparator("gem");
+        }
+    }
+    &.item-type-5 {
+        .title {
+            color: $currencyTextColor;
+            background: getItemHeaderBorders("currency");
+        }
+        .secDescrText,
+        .vaal-name {
+            color: $currencyTextColor;
+        }
+        hr {
+            background: getItemSeparator("currency");
+        }
+    }
+}

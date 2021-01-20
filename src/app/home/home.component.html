@@ -1,30 +1,31 @@
-<div class="container" >
+<div class="container">
   <mat-card class="mat-elevation-z8 main-card">
-      <div class="action-bar">
-        <mat-radio-group [(ngModel)]="currentMode" class="inventory-mode">
-          <mat-radio-button [value]="'chaos'">
-            Chaos Recipe
-          </mat-radio-button>
-          <mat-radio-button [value]="'search'">
-            Search
-          </mat-radio-button>
+    <div class="action-bar">
+      <mat-radio-group [(ngModel)]="currentMode" class="inventory-mode">
+        <mat-radio-button [value]="'chaos'">
+          Chaos Recipe
+        </mat-radio-button>
+        <mat-radio-button [value]="'search'">
+          Search
+        </mat-radio-button>
 
-        </mat-radio-group>
-        <div class="setting-btn">
-          <button color="primary" mat-icon-button matTooltip="An update is available" (click)="openSettings(2)" *ngIf="isOutdated">
-            <mat-icon>error</mat-icon>
-          </button>
-          <button color="accent" mat-icon-button (click)="refresh()">
-            <mat-icon [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
-          </button>
-          <button color="accent" mat-icon-button (click)="openSettings()">
-            <mat-icon>settings</mat-icon>
-          </button>
-        </div>
+      </mat-radio-group>
+      <div class="setting-btn">
+        <button color="primary" mat-icon-button matTooltip="An update is available" (click)="openSettings(2)"
+          *ngIf="isOutdated">
+          <mat-icon>error</mat-icon>
+        </button>
+        <button color="accent" mat-icon-button (click)="refresh()">
+          <mat-icon [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
+        </button>
+        <button color="accent" mat-icon-button (click)="openSettings()">
+          <mat-icon>settings</mat-icon>
+        </button>
       </div>
+    </div>
     <mat-card-content>
       <mat-radio-group class="chaos-set-items" [ngModel]="selectedSetIndex"
-        (ngModelChange)="this.selectedSetIndex=$event;this.onTabChanged(selectedTabIndex)"
+        (ngModelChange)="onSelectedSetChanged($event)"
         *ngIf="currentMode.match('chaos')">
         <mat-radio-button *ngFor="let chaosSet of getCompletedChaosSet();let i=index" [value]="i"
           (click)="toggleSelectedSet(i, $event)">
@@ -55,33 +56,49 @@
       <mat-tab [label]="stashTab.currentTab.n" *ngFor="let stashTab of selectedStashes;index as i"
         [disabled]="!stashContainsSelectedSet(i)">
         <app-stash-tab [stashTab]="stashTab" *ngIf="i===selectedTabIndex"
-          [highlightedItemIndex]="this.getHighLightedItems(i)"></app-stash-tab>
+          [highlightedItemIndex]="this.highLightedItemsIndex"></app-stash-tab>
       </mat-tab>
     </mat-tab-group>
     <div class="chaos-items-stats" *ngIf="chaosSetItemsStat">
-      <button *ngIf="itemTypeSelected!=='weapon'" mat-button (click)="toggleHighlightItemType('weapon')">Weapons ({{chaosSetItemsStat.weapon.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='weapon'" mat-button (click)="toggleHighlightItemType('weapon')">Weapons ({{chaosSetItemsStat.weapon.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='helmet'" mat-button (click)="toggleHighlightItemType('helmet')">Helmet ({{chaosSetItemsStat.helmet.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='helmet'" mat-button (click)="toggleHighlightItemType('helmet')">Helmet ({{chaosSetItemsStat.helmet.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='bodyArmour'" mat-button (click)="toggleHighlightItemType('bodyArmour')">Body Armour ({{chaosSetItemsStat.bodyArmour.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='bodyArmour'" mat-button (click)="toggleHighlightItemType('bodyArmour')">Body Armour ({{chaosSetItemsStat.helmet.count}})</button>
+      <button *ngIf="itemTypeSelected!=='weapon'" mat-button (click)="toggleHighlightItemType('weapon')">Weapons
+        ({{chaosSetItemsStat.weapon.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='weapon'" mat-button
+        (click)="toggleHighlightItemType('weapon')">Weapons ({{chaosSetItemsStat.weapon.count}})</button>
 
-      <button *ngIf="itemTypeSelected!=='gloves'" mat-button (click)="toggleHighlightItemType('gloves')">Gloves ({{chaosSetItemsStat.gloves.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='gloves'" mat-button (click)="toggleHighlightItemType('gloves')">Gloves ({{chaosSetItemsStat.gloves.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='belt'" mat-button (click)="toggleHighlightItemType('belt')">Belt ({{chaosSetItemsStat.ring.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='belt'" mat-button (click)="toggleHighlightItemType('belt')">Belt ({{chaosSetItemsStat.ring.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='boot'" mat-button (click)="toggleHighlightItemType('boot')">Boots ({{chaosSetItemsStat.boot.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='boot'" mat-button (click)="toggleHighlightItemType('boot')">Boots ({{chaosSetItemsStat.boot.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='ring'" mat-button (click)="toggleHighlightItemType('ring')">Rings ({{chaosSetItemsStat.ring.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='ring'" mat-button (click)="toggleHighlightItemType('ring')">Rings ({{chaosSetItemsStat.ring.count}})</button>
-      
-      <button *ngIf="itemTypeSelected!=='amulet'" mat-button (click)="toggleHighlightItemType('amulet')">Amulet ({{chaosSetItemsStat.amulet.count}})</button>
-      <button color="accent" *ngIf="itemTypeSelected==='amulet'" mat-button (click)="toggleHighlightItemType('amulet')">Amulet ({{chaosSetItemsStat.amulet.count}})</button>
+      <button *ngIf="itemTypeSelected!=='helmet'" mat-button (click)="toggleHighlightItemType('helmet')">Helmet
+        ({{chaosSetItemsStat.helmet.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='helmet'" mat-button
+        (click)="toggleHighlightItemType('helmet')">Helmet ({{chaosSetItemsStat.helmet.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='bodyArmour'" mat-button (click)="toggleHighlightItemType('bodyArmour')">Body
+        Armour ({{chaosSetItemsStat.bodyArmour.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='bodyArmour'" mat-button
+        (click)="toggleHighlightItemType('bodyArmour')">Body Armour ({{chaosSetItemsStat.helmet.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='gloves'" mat-button (click)="toggleHighlightItemType('gloves')">Gloves
+        ({{chaosSetItemsStat.gloves.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='gloves'" mat-button
+        (click)="toggleHighlightItemType('gloves')">Gloves ({{chaosSetItemsStat.gloves.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='belt'" mat-button (click)="toggleHighlightItemType('belt')">Belt
+        ({{chaosSetItemsStat.belt.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='belt'" mat-button (click)="toggleHighlightItemType('belt')">Belt
+        ({{chaosSetItemsStat.belt.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='boot'" mat-button (click)="toggleHighlightItemType('boot')">Boots
+        ({{chaosSetItemsStat.boot.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='boot'" mat-button
+        (click)="toggleHighlightItemType('boot')">Boots ({{chaosSetItemsStat.boot.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='ring'" mat-button (click)="toggleHighlightItemType('ring')">Rings
+        ({{chaosSetItemsStat.ring.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='ring'" mat-button
+        (click)="toggleHighlightItemType('ring')">Rings ({{chaosSetItemsStat.ring.count}})</button>
+
+      <button *ngIf="itemTypeSelected!=='amulet'" mat-button (click)="toggleHighlightItemType('amulet')">Amulet
+        ({{chaosSetItemsStat.amulet.count}})</button>
+      <button color="accent" *ngIf="itemTypeSelected==='amulet'" mat-button
+        (click)="toggleHighlightItemType('amulet')">Amulet ({{chaosSetItemsStat.amulet.count}})</button>
     </div>
 
   </mat-card>
