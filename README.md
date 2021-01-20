@@ -43,11 +43,17 @@ Note. This is a quick and dirty approach because I wasn't planning on developing
 If you are experiencing issues just leave a comment in the project under issues. Sometime refreshing will work to solve the problem. You can do that by entering CTRL+R.  To completely clear what is being stored/hard reset everything press CTRL+SHIFT+R. Closing reopening the app can sometimes work.
 Hope that helps
 
-Screenshots
+## Screenshots
+
+![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214751.png)
+![screenshot2](src/assets/images/screenshots/Screenshot-2021-01-19-214814.png)
+![screenshot2](src/assets/images/screenshots/Screenshot-2021-01-19-214844.png)
+![screenshot3](src/assets/images/screenshots/Screenshot-2021-01-19-214909.png)
+![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214704.png)
 
 
 Feedback
-All feedbacks are welcomed. Just be kind.
+All feedbacks are welcomed. Just be kind.isc
 
 ## Known Issue
 * Some one handed sets are are only showing one weapon when it should be showing two.
