@@ -3,7 +3,7 @@
     <img src="assets/images/QuadStashPanelGrid.png" class="stash-grid" *ngIf="stashTab.quadLayout" #stashImgPanel>
     <img src="assets/images/StashPanelGrid.png" class="stash-grid" *ngIf="!stashTab.quadLayout" #stashImgPanel>
     <img *ngFor="let item of stashTab.items; let i=index" class="item"
-      [ngClass]="{'highlight': isItemHighlighted(i), 'identified': item.identified, 'unidentified': item.identified }"
+      [ngClass]="{'highlight': isItemHighlighted(i), 'identified': item.identified===true, 'unidentified': item.identified===false }"
       [src]="item.icon"
       [style.left]="getItemPositionX(item,stashTab)+'px'" [style.top]="getItemPositionY(item,stashTab)+'px'"
       [style.height]="getItemHeight(item,stashTab)+'px'">
