@@ -59,6 +59,11 @@ All feedbacks are welcomed. Just be kind
 * Some one handed sets are are only showing one weapon when it should be showing two.
 
 ## Change log
+### Version 0.0.3
+* Fixed issue with identified items labeled incorrectly
+* Fixed bug with boots stat showing wrong values
+* Added popup to show item detail
+* Updated highlighting mechanism to use a variable state instead of making getting highlighted state from method
 ### Version 0.0.2
 * Updated style of the app
 * Added ability to now see when a update is available for the app
