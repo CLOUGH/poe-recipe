@@ -52,8 +52,8 @@ Hope that helps
 ![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214704.png)
 
 
-Feedback
-All feedbacks are welcomed. Just be kind.isc
+#Feedback
+All feedbacks are welcomed. Just be kind
 
 ## Known Issue
 * Some one handed sets are are only showing one weapon when it should be showing two.
