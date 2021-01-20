@@ -18,6 +18,17 @@ This a app for highlighting items within your stash that can be used to make the
 
 If you get a blank screen at this point or nothing changes just click the refresh button or restart the app. If that didnt work refer to the section about "What to Do if Your having Issues" below.
 
+## Build Instructions
+This project is a Electron.JS and Angular project as such you need to have npm install to compile/develop for this app. 
+
+To install first clone the project  `git clone https://github.com/CLOUGH/poe-recipe.git` and run `npm install` inside the clone project
+
+The list of avaliable commands to run/complie the project can be found in the `package.json` file under scripts. The following would be the most common command required to regular development.
+* `npm run ng` : To use the angular cli command line tool for generating components,models, service, etc. Eg. `npm run ng generate componet shared/components my-component`
+* `npm start`:  To run the application in development mode to allow live updates while developing
+* `npm run electron:build`: To compile application binary (.exe file)
+
+
 ## Rationale 
 So over the weekend I worked on this app that highlights item in your stash to make the chaos recipe. I was trying to use https://github.com/kosace/EnhancePoEApp, it worked initially and then stopped. Tried reaching out to the dev but that was unsuccessful and I needed something to automate the process. Thus the reason for this app.
 
