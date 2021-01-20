@@ -220,7 +220,8 @@ export class HomeComponent implements OnInit {
   }
 
   getCompletedChaosSet() {
-    return this.chaosSetItems ? this.chaosSetItems.filter(chaosSetItem => chaosSetItem.isComplete === true) : [];
+    const completedChaosSets = this.chaosSetItems ? this.chaosSetItems.filter(chaosSetItem => chaosSetItem.isComplete === true) : [];
+    return completedChaosSets;
   }
 
   toggleSelectedSet(selectedSetIndex, event) {
@@ -255,7 +256,7 @@ export class HomeComponent implements OnInit {
       const isItemWeapon = this.isWeapon(chaosItem.item);
       const isItemTwoHandedWeapon = this.getItemType(chaosItem.item) === 'TwoHandWeapons';
       const itemType = this.getItemType(chaosItem.item);
-      const isItemBow = isItemWeapon && this.isWeaponBow(chaosItem.item);
+      // const isItemBow = isItemWeapon && this.isWeaponBow(chaosItem.item);
       const isItemQuiver = this.getItemCategory(chaosItem.item) === 'Quivers';
       const itemCategory = this.getItemCategory(chaosItem.item);
 
@@ -264,77 +265,93 @@ export class HomeComponent implements OnInit {
       for (let index = 0; index < chaosSets.length; index++) {
         const chaosSet = chaosSets[index];
 
-        if (chaosSet.isComplete) {
+        if (chaosSet.isComplete === true) {
           continue;
         }
         else if (chaosSet.recipe.type !== itemRecipe.type || chaosSet.recipe.quantity !== itemRecipe.quantity) {
           continue;
         }
-        else if (isItemQuiver && (!chaosSet.leftWeapon
-          || (this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons' && this.isWeaponBow(chaosSet.leftWeapon.item)))) {
-          chaosSet.rightWeapon = chaosItem;
+
+        //if its a weapon and both slot have something go to the next set
+        else if (isItemWeapon && chaosSet.leftWeapon && chaosSet.rightWeapon) {
+          continue;
+        }
+
+        // Quivers dont seem to be a thing
+        // else if (isItemQuiver && (!chaosSet.leftWeapon
+        //   || (this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons' && this.isWeaponBow(chaosSet.leftWeapon.item)))) {
+        //   chaosSet.rightWeapon = chaosItem;
+        //   itemSlotted = true;
+        // }
+
+        // when its a two handed weapon 
+        // and the left weapon slot is empty or it doesnt contain a two handed weapon
+        else if (isItemWeapon && isItemTwoHandedWeapon && (!chaosSet.leftWeapon || this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons')) {
+          if (chaosSet.leftWeapon) {
+            chaosItems.unshift(chaosSet.leftWeapon);
+            chaosSet.leftWeapon = null;
+          }
+          if (chaosSet.rightWeapon) {
+            chaosItems.unshift(chaosSet.rightWeapon);
+            chaosSet.rightWeapon = null;
+          }
+          chaosSet.leftWeapon = {...chaosItem};
           itemSlotted = true;
         }
-        else if (isItemWeapon && isItemTwoHandedWeapon && !chaosSet.leftWeapon && !chaosSet.rightWeapon) {
-          chaosSet.leftWeapon = chaosItem;
-          itemSlotted = true;
-        }
-        else if (isItemWeapon && isItemTwoHandedWeapon && chaosSet.leftWeapon && !chaosSet.rightWeapon && this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons') {
-          chaosItems.unshift(chaosSet.leftWeapon);
-          chaosSet.leftWeapon = chaosItem;
-          itemSlotted = true;
-        }
+        // when its a one handed weapon and left slot is empty        
         else if (isItemWeapon && !isItemTwoHandedWeapon && !chaosSet.leftWeapon) {
-          chaosSet.leftWeapon = chaosItem;
+          chaosSet.leftWeapon = {...chaosItem};
           itemSlotted = true;
         }
+        // when its a one handed weapon and the left slot is NOT empty
+        // and the left weapon not a two handed weapon
         else if (isItemWeapon && !isItemTwoHandedWeapon && chaosSet.leftWeapon && !chaosSet.rightWeapon && this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons') {
-          chaosSet.rightWeapon = chaosItem;
+          chaosSet.rightWeapon = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemType === 'Shields' && !chaosSet.rightWeapon && (!chaosSet.leftWeapon || this.getItemType(chaosSet.leftWeapon.item) !== 'TwoHandWeapons')) {
-          chaosSet.rightWeapon = chaosItem;
+          chaosSet.rightWeapon = {...chaosItem};
           itemSlotted = true;
         }
-        else if (isItemTwoHandedWeapon && isItemBow && !chaosSet.leftWeapon && chaosSet.rightWeapon && this.getItemCategory(chaosSet.rightWeapon.item) === 'Quivers') {
-          chaosSet.leftWeapon = chaosItem;
-          itemSlotted = true;
-        }
+        // else if (isItemTwoHandedWeapon && isItemBow && !chaosSet.leftWeapon && chaosSet.rightWeapon && this.getItemCategory(chaosSet.rightWeapon.item) === 'Quivers') {
+        //   chaosSet.leftWeapon = {...chaosItem};
+        //   itemSlotted = true;
+        // }
         else if (itemType === 'BodyArmours' && !chaosSet.bodyArmour) {
-          chaosSet.bodyArmour = chaosItem;
+          chaosSet.bodyArmour = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemType === 'Boots' && !chaosSet.boots) {
-          chaosSet.boots = chaosItem;
+          chaosSet.boots = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemType === 'Gloves' && !chaosSet.gloves) {
-          chaosSet.gloves = chaosItem;
+          chaosSet.gloves = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemCategory === 'Amulets' && !chaosSet.amulet) {
-          chaosSet.amulet = chaosItem;
+          chaosSet.amulet = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemCategory === 'Rings' && !chaosSet.rightRing) {
-          chaosSet.rightRing = chaosItem;
+          chaosSet.rightRing = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemCategory === 'Rings' && !chaosSet.leftRing) {
-          chaosSet.leftRing = chaosItem;
+          chaosSet.leftRing = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemCategory === 'Belts' && !chaosSet.belt) {
-          chaosSet.belt = chaosItem;
+          chaosSet.belt = {...chaosItem};
           itemSlotted = true;
         }
         else if (itemType === 'Helmets' && !chaosSet.head) {
-          chaosSet.head = chaosItem;
+          chaosSet.head = {...chaosItem};
           itemSlotted = true;
         }
 
         chaosSet.isComplete = this.getIsChaosSetComplete(chaosSet);
-        if (itemSlotted) {
+        if (itemSlotted === true) {
 
           break;
         }
@@ -347,41 +364,42 @@ export class HomeComponent implements OnInit {
       }
 
       if (itemCategory === 'Amulets') {
-        chaosSets[chaosSets.length - 1].amulet = chaosItem;
+        chaosSets[chaosSets.length - 1].amulet = {...chaosItem};
       }
       if (itemCategory === 'Rings') {
-        chaosSets[chaosSets.length - 1].leftRing = chaosItem;
+        chaosSets[chaosSets.length - 1].leftRing = {...chaosItem};
       }
       if (itemType === 'Helmets') {
-        chaosSets[chaosSets.length - 1].head = chaosItem;
+        chaosSets[chaosSets.length - 1].head = {...chaosItem};
       }
       if (itemCategory === 'Belts') {
-        chaosSets[chaosSets.length - 1].belt = chaosItem;
+        chaosSets[chaosSets.length - 1].belt = {...chaosItem};
       }
       if (itemType === 'Gloves') {
-        chaosSets[chaosSets.length - 1].gloves = chaosItem;
+        chaosSets[chaosSets.length - 1].gloves = {...chaosItem};
       }
       if (itemType === 'Boots') {
-        chaosSets[chaosSets.length - 1].boots = chaosItem;
+        chaosSets[chaosSets.length - 1].boots = {...chaosItem};
       }
       if (itemType === 'BodyArmours') {
-        chaosSets[chaosSets.length - 1].bodyArmour = chaosItem;
+        chaosSets[chaosSets.length - 1].bodyArmour = {...chaosItem};
       }
       if (itemType === 'Shields') {
-        chaosSets[chaosSets.length - 1].rightWeapon = chaosItem;
+        chaosSets[chaosSets.length - 1].rightWeapon = {...chaosItem};
       }
-      if (isItemQuiver === true) {
-        chaosSets[chaosSets.length - 1].rightWeapon = chaosItem;
-      }
+      // if (isItemQuiver === true) {
+      //   chaosSets[chaosSets.length - 1].rightWeapon = {...chaosItem};
+      // }
       if (isItemWeapon === true) {
-        chaosSets[chaosSets.length - 1].leftWeapon = chaosItem;
+        chaosSets[chaosSets.length - 1].leftWeapon = {...chaosItem};
       }
     }
     return chaosSets;
   }
 
   getIsChaosSetComplete(chaosSet: ChaosSet): boolean {
-    return !!(chaosSet.amulet
+    const completed = !!(
+      chaosSet.amulet
       && chaosSet.belt
       && chaosSet.bodyArmour
       && chaosSet.boots
@@ -390,10 +408,19 @@ export class HomeComponent implements OnInit {
       && chaosSet.leftRing
       && chaosSet.rightRing
       && chaosSet.leftWeapon
-      && (
-        this.getItemType(chaosSet.leftWeapon.item) === 'TwoHandWeapons'
-        || chaosSet.rightRing
-      ));
+      && (this.getItemType(chaosSet.leftWeapon.item) === 'TwoHandWeapons' || chaosSet.rightWeapon)
+    );
+
+    if (completed === true) {
+      console.log({
+        chaosSet,
+        isCompleted: completed,
+        leftWeaponType: this.getItemType(chaosSet.leftWeapon.item) === 'TwoHandWeapons',
+        rightWeapon: chaosSet.rightWeapon
+      });
+    }
+
+    return completed;
   }
 
   getChaosItemSetTypeMapping(item: Item) {
@@ -462,7 +489,7 @@ export class HomeComponent implements OnInit {
     }
     else if (this.currentMode === 'chaos') {
       this.chaosSetItems.filter((chaosSetItem, index) => index === this.selectedSetIndex)
-        .forEach(chaosSetItem => {
+        .forEach((chaosSetItem, index) => {
           if (chaosSetItem.amulet && chaosSetItem.amulet.selectedStashIndex === stashIndex) {
             selectedItems.push(chaosSetItem.amulet.selectedItemIndex);
           }
@@ -489,11 +516,16 @@ export class HomeComponent implements OnInit {
           }
           if (chaosSetItem.rightWeapon && chaosSetItem.rightWeapon.selectedStashIndex === stashIndex) {
             selectedItems.push(chaosSetItem.rightWeapon.selectedItemIndex);
+            if(index===0){
+              console.log({right: chaosSetItem.rightWeapon})
+            }
           }
           if (chaosSetItem.leftWeapon && chaosSetItem.leftWeapon.selectedStashIndex === stashIndex) {
             selectedItems.push(chaosSetItem.leftWeapon.selectedItemIndex);
+            if(index===0){
+              console.log({left: chaosSetItem.leftWeapon})
+            }
           }
-
         });
     }
     else if (this.currentMode === 'search') {
