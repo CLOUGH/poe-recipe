@@ -52,7 +52,7 @@ Hope that helps
 ![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214704.png)
 
 
-#Feedback
+# Feedback
 All feedbacks are welcomed. Just be kind
 
 ## Known Issue
