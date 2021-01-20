@@ -45,11 +45,11 @@ Hope that helps
 
 ## Screenshots
 
-![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214751.png)
-![screenshot2](src/assets/images/screenshots/Screenshot-2021-01-19-214814.png)
-![screenshot2](src/assets/images/screenshots/Screenshot-2021-01-19-214844.png)
-![screenshot3](src/assets/images/screenshots/Screenshot-2021-01-19-214909.png)
-![screenshot1](src/assets/images/screenshots/Screenshot-2021-01-19-214704.png)
+![screenshot1](src/assets/screenshots/Screenshot-2021-01-19-214751.png)
+![screenshot2](src/assets/screenshots/Screenshot-2021-01-19-214814.png)
+![screenshot3](src/assets/screenshots/Screenshot-2021-01-19-214844.png)
+![screenshot4](src/assets/screenshots/Screenshot-2021-01-19-214909.png)
+![screenshot5](src/assets/screenshots/Screenshot-2021-01-19-214704.png)
 
 
 # Feedback

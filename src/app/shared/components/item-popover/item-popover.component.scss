@@ -1,13 +1,3 @@
-@function getItemHeaderBorders($type) {
-    @return url("/assets/images/header-#{$type}-left.png") top left no-repeat,
-        url("/assets/images/header-#{$type}-right.png") top right no-repeat,
-        url("/assets/images/header-#{$type}-middle.png");
-}
-
-@function getItemSeparator($type) {
-    @return url("/assets/images/separator-#{$type}.png") center no-repeat;
-}
-
 $rareTextColor: #ff7;
 $gemTextColor: #1ba29b;
 $normalTextColor: #c8c8c8;
@@ -53,13 +43,13 @@ mat-card {
         font-size: 19px;
         line-height: 1em;
         height: 33px;
-        
+
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
     }
-    .double-line{
+    .double-line {
         height: 53px;
     }
     .content {
@@ -76,7 +66,9 @@ mat-card {
 
     &.item-type-0 {
         .title {
-            background: getItemHeaderBorders("normal");
+            background: url("../../../../assets/images/header-normal-left.png") top left no-repeat,
+                url("../../../../assets/images/header-normal-right.png") top right no-repeat,
+                url("../../../../assets/images/header-normal-middle.png");
             color: $normalTextColor;
         }
         .secDescrText,
@@ -84,13 +76,15 @@ mat-card {
             color: $normalTextColor;
         }
         hr {
-            background: getItemSeparator("normal");
+            background: url("../../../../assets/images/separator-normal.png") center no-repeat;
         }
     }
 
     &.item-type-1 {
         .title {
-            background: getItemHeaderBorders("magic");
+            background: url("../../../../assets/images/header-magic-left.png") top left no-repeat,
+                url("../../../../assets/images/header-magic-right.png") top right no-repeat,
+                url("../../../../assets/images/header-magic-middle.png");
             color: $magicTextColor;
         }
         .secDescrText,
@@ -98,28 +92,31 @@ mat-card {
             color: $magicTextColor;
         }
         hr {
-            background: getItemSeparator("magic");
+            background: url("../../../../assets/images/separator-magic.png") center no-repeat;
         }
     }
     &.item-type-2 {
         .title {
-            background: getItemHeaderBorders("double-rare");
-            color: $rareTextColor;            
+            background: url("../../../../assets/images/header-double-rare-left.png") top left no-repeat,
+                url("../../../../assets/images/header-double-rare-right.png") top right no-repeat,
+                url("../../../../assets/images/header-double-rare-middle.png");
+            color: $rareTextColor;
             height: 53px;
-
         }
         .secDescrText,
         .vaal-name {
             color: $rareTextColor;
         }
         hr {
-            background: getItemSeparator("rare");
+            background: url("../../../../assets/images/separator-rare.png") center no-repeat;
         }
     }
     &.item-type-3 {
         .title {
             color: $uniqueTextColor;
-            background: getItemHeaderBorders("double-unique");
+            background: url("../../../../assets/images/header-double-unique-left.png") top left no-repeat,
+                url("../../../../assets/images/header-double-unique-right.png") top right no-repeat,
+                url("../../../../assets/images/header-double-unique-middle.png");
             height: 53px;
         }
         .secDescrText,
@@ -127,33 +124,38 @@ mat-card {
             color: $uniqueTextColor;
         }
         hr {
-            background: getItemSeparator("unique");
+            background: url("../../../../assets/images/separator-unique.png") center no-repeat;
         }
     }
     &.item-type-4 {
         .title {
             color: $gemTextColor;
-            background: getItemHeaderBorders("gem");
+            background: url("../../../../assets/images/header-gem-left.png") top left no-repeat,
+                url("../../../../assets/images/header-gem-right.png") top right no-repeat,
+                url("../../../../assets/images/header-gem-middle.png");
         }
         .secDescrText,
         .vaal-name {
             color: $gemTextColor;
         }
         hr {
-            background: getItemSeparator("gem");
+            background: url("../../../../assets/images/separator-gem.png") center no-repeat;
         }
     }
     &.item-type-5 {
         .title {
             color: $currencyTextColor;
-            background: getItemHeaderBorders("currency");
+            background: url("../../../../assets/images/header-currency-left.png") top left no-repeat,
+                url("../../../../assets/images/header-currency-right.png") top right no-repeat,
+                url("../../../../assets/images/header-currency-middle.png");
+            
         }
         .secDescrText,
         .vaal-name {
             color: $currencyTextColor;
         }
         hr {
-            background: getItemSeparator("currency");
+            background: url("../../../../assets/images/separator-currency.png") center no-repeat;
         }
     }
 }
