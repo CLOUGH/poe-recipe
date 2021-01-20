@@ -4,7 +4,7 @@
       <mat-card-title>Settings</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <mat-tab-group  animationDuration="0ms">
+      <mat-tab-group  animationDuration="0ms" color="accent" [selectedIndex]="selectedTabIndex">
         <mat-tab label="Account">
           <mat-form-field>
             <mat-label>Account Name</mat-label>
@@ -40,6 +40,17 @@
             <input matInput placeholder="label" placeholder="60" value="60" [(ngModel)]="settings.poeApiRefreshRate" type="number" min="15" name="refresh-rate">
             <mat-hint>Minimum 15 seconds</mat-hint>
           </mat-form-field>
+        </mat-tab>
+        <mat-tab label="About">
+          <h1>POE Recipe</h1>
+          <p>Author: Warren Clough</p>
+          <p>Created: 2021</p>
+          <p>Version: {{appVersion}}</p>
+          <br>
+          <button mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe/releases')">Download Latest Release</button>
+          <button mat-button (click)="openLink('https://github.com/CLOUGH/poe-recipe')" >Github Page</button>
+
+          <h1 *ngIf="isOutdated">This version of the application is outdated. Download the latest release</h1>
         </mat-tab>
       </mat-tab-group>
 

@@ -7,6 +7,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 import { PageNotFoundComponent } from './components/';
 import { WebviewDirective } from './directives/';
@@ -15,6 +16,7 @@ import { StashTabComponent } from './components/stash-tab/stash-tab.component';
 import { SettingsDialogComponent } from './components/settings-dialog/settings-dialog.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorDetailDialogComponent } from './components/error-detail-dialog/error-detail-dialog.component';
+
 
 
 @NgModule({
@@ -35,7 +37,8 @@ import { ErrorDetailDialogComponent } from './components/error-detail-dialog/err
     MatCardModule,
     MatCheckboxModule,
     ReactiveFormsModule,
-    MatTabsModule
+    MatTabsModule,
+    MatTooltipModule
   ],
   exports: [
     TranslateModule,
@@ -44,7 +47,8 @@ import { ErrorDetailDialogComponent } from './components/error-detail-dialog/err
     SettingsDialogComponent,
     StashTabComponent,
     ReactiveFormsModule,
-    ErrorDetailDialogComponent
+    ErrorDetailDialogComponent,
+    MatTooltipModule
   ]
 })
 export class SharedModule { }
