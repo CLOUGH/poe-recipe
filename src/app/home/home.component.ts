@@ -60,22 +60,26 @@ export class HomeComponent implements OnInit {
 
   async refresh() {
     this.settings = this.settingsService.getSettings();
-    this.onPoeSessionIdUpdated();
-    await this.getStashTabs();
-
-    if (this.refreshInterval) {
-      this.refreshInterval.unsubscribe();
-    }
-
-    console.log(this.settings);
-    this.refreshRate = (this.settings.poeApiRefreshRate || 60) * 1000;
-    this.refreshInterval = interval(this.refreshRate).subscribe(() => {
+    this.poeService.setPoeSessionIdCookie(this.settings && this.settings.poeSessionId);
+    setTimeout(() => {
+      this.onPoeSessionIdUpdated();
+      
       this.getStashTabs();
-      console.log("Refreshed", this.settings.poeApiRefreshRate);
-    });
+      
+  
+      if (this.refreshInterval) {
+        this.refreshInterval.unsubscribe();
+      }
+      this.refreshRate = (this.settings.poeApiRefreshRate || 60) * 1000;
+      this.refreshInterval = interval(this.refreshRate).subscribe(() => {
+        this.getStashTabs();
+        console.log("Refreshed", this.settings.poeApiRefreshRate);
+      });
+  
+      this.searchForm.valueChanges.subscribe((searchValue) => {
+        this.search = searchValue;
+      })
 
-    this.searchForm.valueChanges.subscribe((searchValue) => {
-      this.search = searchValue;
     })
   }
 

@@ -4,3 +4,4 @@
 * Added ability to select type of items
 * Add ability to automatically refresh the tab
 * Added a error detail dialog to show the details of errors coming from the API.
+* Resolve bugs with initial load of the app does load stash
