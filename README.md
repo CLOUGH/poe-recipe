@@ -1,6 +1,9 @@
 ## About
 This a app for highlighting items within your stash that can be used to make the chaos recipe. 
 
+## Rationale 
+So over the weekend I worked on this app that highlights item in your stash to make the chaos recipe. I was trying to use https://github.com/kosace/EnhancePoEApp, it worked initially and then stopped. Tried reaching out to the dev but that was unsuccessful and I needed something to automate the process. Thus the reason for this app.
+
 ## Download & Source
 * Repo - https://github.com/CLOUGH/poe-recipe
 * Download build - https://github.com/CLOUGH/poe-recipe/releases
@@ -29,8 +32,6 @@ The list of avaliable commands to run/complie the project can be found in the `p
 * `npm run electron:build`: To compile application binary (.exe file)
 
 
-## Rationale 
-So over the weekend I worked on this app that highlights item in your stash to make the chaos recipe. I was trying to use https://github.com/kosace/EnhancePoEApp, it worked initially and then stopped. Tried reaching out to the dev but that was unsuccessful and I needed something to automate the process. Thus the reason for this app.
 
 ## Dev Tools 
 The app is built use Electron.js and Angular.  The base of the project was forked from https://github.com/maximegris/angular-electron. 
