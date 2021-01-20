@@ -9,7 +9,7 @@ import { SettingsService } from '../settings.service';
   providedIn: 'root'
 })
 export class AppReleaseService {
-  githubApi = 'https://api.github.com/'
+  githubApi = 'https://api.github.com'
 
   constructor(private httpClient: HttpClient, private electronService: ElectronService, private settingService: SettingsService) {}
   
