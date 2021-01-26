@@ -91,7 +91,6 @@ function createOverlayWindow(): BrowserWindow {
 
   } else {
     console.log(path.join(__dirname, 'dist/index.html')+'#/stash-overlay');
-    overlayWin.webContents.openDevTools();
     overlayWin.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file:',
