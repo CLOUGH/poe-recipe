@@ -1,5 +1,5 @@
-:host {
-
+::ng-deep body{
+  background: black;
 }
 .container {
 }
@@ -28,20 +28,6 @@ pre {
   mat-radio-button {
     margin-right: 15px;
   }
-}
-
-@keyframes rotation {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(359deg);
-  }
-}
-
-.spinning {
-  animation: rotation 2s infinite linear;
-
 }
 
 .chaos-items-stats {

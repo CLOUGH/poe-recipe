@@ -18,6 +18,7 @@ import { SettingsDialogComponent } from './components/settings-dialog/settings-d
 import { MatTabsModule } from '@angular/material/tabs';
 import { ErrorDetailDialogComponent } from './components/error-detail-dialog/error-detail-dialog.component';
 import { ItemPopoverComponent } from './components/item-popover/item-popover.component';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -42,7 +43,8 @@ import { ItemPopoverComponent } from './components/item-popover/item-popover.com
     ReactiveFormsModule,
     MatTabsModule,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    MatIconModule
   ],
   exports: [
     TranslateModule,
@@ -52,7 +54,8 @@ import { ItemPopoverComponent } from './components/item-popover/item-popover.com
     StashTabComponent,
     ReactiveFormsModule,
     ErrorDetailDialogComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    MatIconModule
   ]
 })
 export class SharedModule { }

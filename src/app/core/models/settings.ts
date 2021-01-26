@@ -7,4 +7,13 @@ export interface Settings {
   selectedTabIds?: string[];
   poeApiRefreshRate?: number;
   enableAutoRefresh?: boolean;
+  overlay?: OverlaySettings;
+
+}
+
+export interface OverlaySettings {
+  x?: number;
+  y?: number;
+  height?: number;
+  width?:number;
 }

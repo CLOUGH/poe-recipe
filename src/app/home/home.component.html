@@ -11,6 +11,9 @@
 
       </mat-radio-group>
       <div class="setting-btn">
+        <button color="accent" (click)="openStashOverlay()" mat-icon-button matTooltip="Open in overlay mode" >
+          <mat-icon>launch</mat-icon>
+        </button>
         <button color="primary" mat-icon-button matTooltip="An update is available" (click)="openSettings(2)"
           *ngIf="isOutdated">
           <mat-icon>error</mat-icon>
@@ -25,12 +28,13 @@
     </div>
     <mat-card-content>
       <mat-radio-group class="chaos-set-items" [ngModel]="selectedSetIndex"
-        (ngModelChange)="onSelectedSetChanged($event)"
-        *ngIf="currentMode.match('chaos')">
-        <mat-radio-button *ngFor="let chaosSet of getCompletedChaosSet();let i=index" [value]="i"
-          (click)="toggleSelectedSet(i, $event)">
-          Set {{i}} <span *ngIf="chaosSet.isComplete">[Complete]</span>
-        </mat-radio-button>
+        (ngModelChange)="onSelectedSetChanged($event)" *ngIf="currentMode.match('chaos')">
+        <span *ngFor="let chaosSet of chaosSetItems;let i=index">
+          <mat-radio-button *ngIf="chaosSet.isComplete===true" [value]="i" (click)="toggleSelectedSet(i, $event)">
+            Set {{i}} <span *ngIf="chaosSet.isComplete">[Complete]</span>
+          </mat-radio-button>
+
+        </span>
       </mat-radio-group>
       <div class="no-completed-notification" *ngIf="getCompletedChaosSet().length===0">
         No Completed Chaos Set Found

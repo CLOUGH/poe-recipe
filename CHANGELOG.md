@@ -1,3 +1,8 @@
+### Version 0.1.0
+* Fixed issue with issue where selecting a set sometimes does not highlight the right items
+* Fixed bug with some one handed weapons not being highlighted 
+* Added in game overlay
+* Code refactors and improvements
 ### Version 0.0.3
 * Fixed issue with identified items labeled incorrectly
 * Fixed bug with boots stat showing wrong values

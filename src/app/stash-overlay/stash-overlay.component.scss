@@ -1,0 +1,108 @@
+::ng-deep body {
+    color: white;
+    background: transparent;
+}
+:host > div {
+}
+.stash-grid {
+    border: 1px solid rgba($color: white, $alpha: 0.8);
+    height: calc(100vh - 62px);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.edit-mode {
+    .grid-box {
+        border: 1px solid rgba($color: white, $alpha: 0.1);
+    }
+
+    .drag-btn {
+    }
+}
+.draggable-region {
+    height: 33px;
+    color: white;
+    text-align: center;
+    position: relative;
+
+    // background-color:blueviolet;
+    .blur {
+        backdrop-filter: grayscale(1);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+    }
+}
+button {
+    
+}
+.drag-btn {
+    position: absolute;
+    margin: auto;
+    bottom: 15px;
+    background-color: transparent;
+    cursor: grab !important;
+
+    -webkit-app-region: drag;
+    border: 1px solid white;
+    border-bottom: 0px;
+    margin-bottom: -15px;
+}
+
+.footer {
+    position: relative;
+    height: 25px;
+    border-bottom: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    font-size: 12px;
+    line-height: 1;
+    display: flex;
+    justify-content: space-between;
+
+    .set-stat {
+        margin-left: 5px;
+    }
+
+    select {
+        margin: 2px;
+    }
+    .actions{
+        text-align: right;
+        button {
+            background-color: transparent;
+            color: white;
+            border: white 1px solid;
+            border-top: none;
+            &:focus {
+                outline: none;
+            }
+            mat-icon {
+                font-size: 20px;
+                height: 20px;
+                width: 20px;
+            }
+
+        }
+        .done-btn {
+            color: #69f0ae;
+        }
+    }
+
+}
+
+select option:disabled {
+    background: black;
+}
+
+.highlighted-items {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    &>div{
+        position: absolute;
+        box-shadow: inset 1px 1px 1px black;
+        background: rgba($color: #69f0ae, $alpha: 0.5);
+    }
+}

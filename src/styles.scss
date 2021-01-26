@@ -5,7 +5,7 @@ body {
   padding: 0;
 
   height: 100%;
-  background-color: black;
+  background-color: transparent;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
@@ -182,4 +182,19 @@ $corruptedTextColor: #d20000;
   100% {
       opacity: 0;
   }
+}
+
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+.spinning {
+  animation: rotation 2s infinite linear;
+
 }

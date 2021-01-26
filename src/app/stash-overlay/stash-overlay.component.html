@@ -1,0 +1,61 @@
+<div [ngClass]="{'edit-mode': editModeEnabled}">
+    <div class="draggable-region" #header>
+        <mat-icon *ngIf="editModeEnabled" class="drag-btn" #dragBtn>open_with</mat-icon>
+    </div>
+    <div class="stash-grid" #stashGrid [ngClass]="{'entered': entered}" #stashImgPanel>
+        <!-- <div class="grid-box" *ngFor="let item of gridBox"></div> -->
+        <div class="highlighted-items" *ngIf="selectedSetIndex>=0 && containsChaosSet(this.selectedStashTabIndex)">
+            <div class="item" *ngFor="let itemIndex of chaosRecipeItemsIndex"
+                [style.left]="getItemPositionX(stashTabs[selectedStashTabIndex].items[itemIndex],stashTabs[selectedStashTabIndex])+'px'"
+                [style.top]="getItemPositionY(stashTabs[selectedStashTabIndex].items[itemIndex],stashTabs[selectedStashTabIndex])+'px'"
+                [style.height]="getItemHeight(stashTabs[selectedStashTabIndex].items[itemIndex],stashTabs[selectedStashTabIndex])+'px'"
+                [style.width]="getItemWidth(stashTabs[selectedStashTabIndex].items[itemIndex],stashTabs[selectedStashTabIndex])+'px'"
+                [style.width]="stashTabs[selectedStashTabIndex].items[itemIndex].w">
+            </div>
+        </div>
+    </div>
+    <div class="footer" #footer>
+        <div class="completed-sets-list" #completedSetList>
+            Set:
+            <select [(ngModel)]="selectedSetIndex" (ngModelChange)="onSelectedSetChanged($event)" tabindex="-1">
+                <option>None selected</option>
+                <option *ngFor="let chaosSet of chaosRecipeSets;let i=index" [value]="i">
+                    Set {{i+0}} <span *ngIf="chaosSet.isComplete">[Completed]</span>
+                </option>
+            </select>
+            Tab:
+            <select [(ngModel)]="selectedStashTabIndex" (ngModelChange)="onStashTabSelectedChanged($event)" tabindex="-1">
+                <option *ngFor="let stashTab of stashTabs;let i=index" [value]="i" [disabled]="!containsChaosSet(i)">
+                    {{stashTab.currentTab.n}}
+                </option>
+            </select>
+            <span *ngIf="chaosRecipeSets">
+                Completed: {{getNoCompletedSets()}}
+            </span>
+            <span *ngIf="chaosSetStat">
+                <span class="set-stat">Head: {{ chaosSetStat.helmet.count}}</span>
+                <span class="set-stat">Chest: {{ chaosSetStat.bodyArmour.count}}</span>
+                <span class="set-stat">Belt: {{ chaosSetStat.belt.count}}</span>
+                <span class="set-stat">Boots: {{ chaosSetStat.boot.count}}</span>
+                <span class="set-stat">Ring: {{ chaosSetStat.ring.count}}</span>
+                <span class="set-stat">Gloves: {{ chaosSetStat.gloves.count}}</span>
+                <span class="set-stat">Weapon: {{ chaosSetStat.weapon.count}}</span>
+            </span>
+        </div>
+        <div class="actions">
+            <button mat-icon-button color="accent" class="done-btn" (click)="refresh()" #doneBtn>
+                <mat-icon  [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
+            </button>
+            <button mat-icon-button color="accent" class="done-btn" (click)="closeWindow()" #doneBtn>
+                <mat-icon>visibility_off</mat-icon>
+            </button>
+            <!-- <button mat-icon-button class="settings-btn" routerLink="/" #doneBtn>
+                <mat-icon>settings</mat-icon>
+            </button> -->
+            <button mat-icon-button class="edit-mode-btn" (click)="toggleEditMode()" #editModeBtn tabindex="-1">
+                <mat-icon *ngIf="editModeEnabled">lock_open</mat-icon>
+                <mat-icon *ngIf="!editModeEnabled">lock</mat-icon>
+            </button>
+        </div>
+    </div>
+</div>
