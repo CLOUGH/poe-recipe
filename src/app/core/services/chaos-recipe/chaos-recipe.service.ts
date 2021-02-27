@@ -16,7 +16,8 @@ enum EItemCategory {
   amulet = 'Amulets',
   ring = 'Rings',
   belt = 'Belts',
-  weapon = 'Weapons'
+  weapon = 'Weapons',
+  shield = 'Shields'
 }
 
 @Injectable({
@@ -27,10 +28,11 @@ export class ChaosRecipeService {
 
   getChaosRecipeSets(stashTabs: StashTab[]): ChaosSet[] {
     let chaosItemSets: ChaosSet[] = [];
+    const greedy = true;
     stashTabs.forEach((stashTab, stashIndex) => {
       stashTab.items.forEach((item, itemIndex) => {
-        if (this.isItemAChaosItem(item)) {
-          chaosItemSets = this.addItemToChaosSet(item, chaosItemSets, itemIndex, stashIndex);
+        if (this.isItemAChaosItem(item, greedy)) {
+          chaosItemSets = this.addItemToChaosSet(item, chaosItemSets, itemIndex, stashIndex, greedy);
         }
       });
     });
@@ -38,7 +40,7 @@ export class ChaosRecipeService {
     return chaosItemSets;
   }
 
-  addItemToChaosSet(item: Item, chaosItemSets: ChaosSet[], itemIndex: number, stashIndex: number): ChaosSet[] {
+  addItemToChaosSet(item: Item, chaosItemSets: ChaosSet[], itemIndex: number, stashIndex: number, greedy: Boolean): ChaosSet[] {
     const updatedChaosItemSets = [...chaosItemSets];
 
     if (updatedChaosItemSets.length === 0) {
@@ -46,7 +48,7 @@ export class ChaosRecipeService {
         isComplete: false,
         recipe: {
           type: 'Chaos Orb',
-          quantity: this.getItemYieldQuantity(item)
+          quantity: this.getItemYieldQuantity(item, greedy)
         }
       });
     }
@@ -54,7 +56,8 @@ export class ChaosRecipeService {
     for (let chaosSetIndex = 0; chaosSetIndex < updatedChaosItemSets.length; chaosSetIndex++) {
       const chaosSet = updatedChaosItemSets[chaosSetIndex];
       let slotted = false;
-      if (chaosSet.isComplete === true || chaosSet.recipe.quantity !== this.getItemYieldQuantity(item)) {
+      if (chaosSet.isComplete === true || chaosSet.recipe.quantity !== this.getItemYieldQuantity(item, greedy) || this.addingItemMakeSetRegal(item, chaosSet, greedy,itemIndex, stashIndex)===true) {
+
         continue;
       }
       else if (this.canWeaponFitInSet(item, chaosSet)) {
@@ -104,7 +107,7 @@ export class ChaosRecipeService {
       isComplete: false,
       recipe: {
         type: 'Chaos Orb',
-        quantity: this.getItemYieldQuantity(item)
+        quantity: this.getItemYieldQuantity(item, greedy)
       }
     });
     const chaosSetIndex = updatedChaosItemSets.length - 1;
@@ -113,6 +116,7 @@ export class ChaosRecipeService {
       updatedChaosItemSets[chaosSetIndex] = this.fitWeaponInSet(item, chaosSet, itemIndex, stashIndex);
       return updatedChaosItemSets;
     }
+
     else if (this.canRingFitInSet(item, chaosSet)) {
       updatedChaosItemSets[chaosSetIndex] = this.fitRingInSet(item, chaosSet, itemIndex, stashIndex);
       return updatedChaosItemSets;
@@ -150,6 +154,121 @@ export class ChaosRecipeService {
     return updatedChaosItemSets;
   }
 
+
+  canItemFitInSet(item: Item, chaosSet: ChaosSet, greedy: Boolean) {
+    if(chaosSet.isComplete === true || chaosSet.recipe.quantity !== this.getItemYieldQuantity(item, greedy)){
+      return false
+    }
+    else if (this.canWeaponFitInSet(item, chaosSet)) {
+      return true;
+    }
+    else if (this.canRingFitInSet(item, chaosSet)) {
+      return true;
+    }
+    else if (this.getItemType(item) === EItemType.boots && !chaosSet.boots) {
+      return true;
+    }
+    else if (this.getItemType(item) === EItemType.gloves && !chaosSet.gloves) {
+      return true;
+    }
+    else if (this.getItemType(item) === EItemType.helmet && !chaosSet.head) {
+      return true;
+    }
+    else if (this.getItemType(item) === EItemType.bodyArmour && !chaosSet.bodyArmour) {
+      return true;
+    }
+    else if (this.getItemType(item) === EItemType.bodyArmour && !chaosSet.bodyArmour) {
+      return true;
+    }
+    else if (this.getItemCategory(item) === EItemCategory.belt && !chaosSet.belt) {
+      return true;
+    }
+    else if (this.getItemCategory(item) === EItemCategory.amulet && !chaosSet.amulet) {
+      return true;
+    }
+    return false;
+
+  }
+
+  addingItemMakeSetRegal(item: Item, chaosSet: ChaosSet,greedy: Boolean, itemIndex, stashIndex, ) {
+    let noItemInSet = 0;
+    let foundChaosItemLevel = false;
+    let tempChaosSet = {...chaosSet};
+
+    let slotted = false;
+
+    if (this.canWeaponFitInSet(item, tempChaosSet)) {
+      tempChaosSet = this.fitWeaponInSet(item, tempChaosSet, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.canRingFitInSet(item, tempChaosSet)) {
+      tempChaosSet = this.fitRingInSet(item, tempChaosSet, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemType(item) === EItemType.boots && !tempChaosSet.boots) {
+      tempChaosSet.boots = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemType(item) === EItemType.gloves && !tempChaosSet.gloves) {
+      tempChaosSet.gloves = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemType(item) === EItemType.helmet && !tempChaosSet.head) {
+      tempChaosSet.head = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemType(item) === EItemType.bodyArmour && !tempChaosSet.bodyArmour) {
+      tempChaosSet.bodyArmour = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemType(item) === EItemType.bodyArmour && !tempChaosSet.bodyArmour) {
+      tempChaosSet.bodyArmour = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemCategory(item) === EItemCategory.belt && !tempChaosSet.belt) {
+      tempChaosSet.belt = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+    else if (this.getItemCategory(item) === EItemCategory.amulet && !tempChaosSet.amulet) {
+      tempChaosSet.amulet = this.toChaosItem(item, itemIndex, stashIndex);
+      slotted = true;
+    }
+
+    
+    if(tempChaosSet.amulet){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.amulet.item, false);
+    }
+    if(tempChaosSet.rightRing){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.rightRing.item, false);
+    }
+    if(tempChaosSet.leftRing){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.leftRing.item, false);
+    }
+    if(tempChaosSet.rightWeapon){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.rightWeapon.item, false);
+    }
+    if(tempChaosSet.leftWeapon){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.leftWeapon.item, false);
+    }
+    if(tempChaosSet.belt){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.belt.item, false);
+    }
+    if(tempChaosSet.head){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.head.item, false);
+    }
+    if(tempChaosSet.bodyArmour){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.bodyArmour.item, false);
+    }
+    if(tempChaosSet.gloves){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.gloves.item, false);
+    }
+    if(tempChaosSet.boots){
+      foundChaosItemLevel = foundChaosItemLevel || this.isItemAChaosItem(tempChaosSet.boots.item, false);
+    }
+
+    return this.isSetCompleted(tempChaosSet)===true && foundChaosItemLevel ===false;
+  }
+  
   isSetCompleted(chaosSet: ChaosSet): boolean {
     return chaosSet.amulet
       && chaosSet.belt
@@ -232,7 +351,7 @@ export class ChaosRecipeService {
   }
 
   canWeaponFitInSet(item: Item, chaosSet: ChaosSet) {
-    if (this.getItemCategory(item) !== EItemCategory.weapon) {
+    if (this.getItemCategory(item) !== EItemCategory.weapon && this.getItemCategory(item) !== EItemCategory.shield) {
       return false;
     }
 
@@ -251,22 +370,23 @@ export class ChaosRecipeService {
     return true;
   }
 
-  getItemYieldQuantity(item: Item) {
-    if (this.isItemAChaosItem(item) && item.identified === false) {
+  getItemYieldQuantity(item: Item, greedy: Boolean) {
+    if (this.isItemAChaosItem(item,greedy) && item.identified === false) {
       return 2;
     }
-    if (this.isItemAChaosItem(item) && item.identified === true) {
+    if (this.isItemAChaosItem(item, greedy) && item.identified === true) {
       return 1;
     }
 
     return 0;
   }
 
-  isItemAChaosItem(item: Item) {
-    return item.ilvl >= 60
+  isItemAChaosItem(item: Item, greedy: Boolean) {
+    return item.ilvl >= 60 
+      && (greedy===true ? true : item.ilvl <= 74)
       && item.frameType === 2
       && (
-        this.getItemCategory(item) === EItemCategory.amulet
+        this.getItemCategory(item) === EItemCategory.amulet 
         || this.getItemCategory(item) === EItemCategory.ring
         || this.getItemType(item) === EItemType.helmet
         || this.getItemCategory(item) === EItemCategory.belt
@@ -274,7 +394,7 @@ export class ChaosRecipeService {
         || this.getItemType(item) === EItemType.boots
         || this.getItemType(item) === EItemType.bodyArmour
         || this.getItemCategory(item) === EItemCategory.weapon
-        // || this.getItemCategory(item) === 'Shields'
+        || this.getItemCategory(item) === EItemCategory.shield
         // || this.getItemCategory(item) === 'Quivers'
       )
   }
@@ -329,6 +449,7 @@ export class ChaosRecipeService {
   }
 
   getChaosSetStat(stashTabs: StashTab[]) {
+    const greedy = true
     const chaosSetItemsStat: ChaosSetStat = {
       bodyArmour: {
         count: 0,
@@ -367,7 +488,7 @@ export class ChaosRecipeService {
     
     stashTabs.forEach((stashTab, stashTabIndex) => {
       stashTab.items.forEach((item, itemIndex) => {
-        if (this.isItemAChaosItem(item)) {
+        if (this.isItemAChaosItem(item, greedy)) {
           const chaosItem = this.toChaosItem(item, itemIndex, stashTabIndex);
 
           if (this.getItemCategory(item) === 'Amulets') {

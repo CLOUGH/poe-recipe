@@ -16,4 +16,5 @@ export interface OverlaySettings {
   y?: number;
   height?: number;
   width?:number;
+  editable?: boolean;
 }

@@ -63,6 +63,12 @@ button {
 
     .set-stat {
         margin-left: 5px;
+        &:hover {
+            cursor: pointer;
+        }
+        .stat {
+            color: #69f0ae;
+        }
     }
 
     select {

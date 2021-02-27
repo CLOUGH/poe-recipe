@@ -7,11 +7,12 @@ import { Settings } from '../core/models/settings';
 import { StashTab, Item } from '../core/models/stash-tab';
 import { ChaosRecipeService, ElectronService, PathOfExileService } from '../core/services';
 import { SettingsService } from '../core/services/settings.service';
+import { AppConfig } from '../../environments/environment'
 
 @Component({
   selector: 'app-stash-overlay',
   templateUrl: './stash-overlay.component.html',
-  styleUrls: ['./stash-overlay.component.scss']
+  styleUrls: ['./stash-overlay.component.scss'],
 })
 export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -38,6 +39,7 @@ export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
   settings: Settings;
   refreshing: boolean;
   @ViewChild("stashImgPanel") public stashImgPanel: ElementRef;
+  showingText: string
 
   @HostListener('window:resize', ['$event.target'])
   onResize() {
@@ -48,10 +50,12 @@ export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
       width,
       height,
       x,
-      y
+      y,
+      editable: this.editModeEnabled
     };
 
     this.settingsService.saveSettings(this.settings);
+    this.currentWindow.setResizable(this.editModeEnabled);
   }
 
   constructor(
@@ -74,8 +78,9 @@ export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
     if(this.settings.overlay) {
       this.currentWindow.setPosition(this.settings.overlay.x, this.settings.overlay.y);
       this.currentWindow.setSize(this.settings.overlay.width, this.settings.overlay.height);
+      this.editModeEnabled = this.settings.overlay.editable === true || this.settings.overlay.editable===false  ? this.settings.overlay.editable :  true;
     }
-
+    this.currentWindow.setResizable(this.editModeEnabled);
   }
   ngOnDestroy(): void {
     window.removeEventListener("storage", this.onLocalStorageUpdate.bind(this), false);
@@ -136,11 +141,17 @@ export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleEditMode() {
     this.editModeEnabled = !this.editModeEnabled;
     this.entered = true;
+    this.settings.overlay.editable = this.editModeEnabled;
+    
+    this.settingsService.saveSettings(this.settings);
     this.currentWindow.setResizable(this.editModeEnabled);
   }
 
   closeWindow() {
-    console.log("close window event fired")
+    console.log("close window event fired",AppConfig.environment)
+    if(this.electronService.remote.getCurrentWebContents().isDevToolsOpened()) {
+      this.electronService.remote.getCurrentWebContents().closeDevTools();
+    }
     this.currentWindow.close();
   }
 
@@ -239,5 +250,8 @@ export class StashOverlayComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  showHiddenText(text) {
+    this.showingText = text;
+  }
 
 }

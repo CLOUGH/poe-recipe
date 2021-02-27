@@ -24,7 +24,8 @@
                 </option>
             </select>
             Tab:
-            <select [(ngModel)]="selectedStashTabIndex" (ngModelChange)="onStashTabSelectedChanged($event)" tabindex="-1">
+            <select [(ngModel)]="selectedStashTabIndex" (ngModelChange)="onStashTabSelectedChanged($event)"
+                tabindex="-1">
                 <option *ngFor="let stashTab of stashTabs;let i=index" [value]="i" [disabled]="!containsChaosSet(i)">
                     {{stashTab.currentTab.n}}
                 </option>
@@ -33,18 +34,27 @@
                 Completed: {{getNoCompletedSets()}}
             </span>
             <span *ngIf="chaosSetStat">
-                <span class="set-stat">Head: {{ chaosSetStat.helmet.count}}</span>
-                <span class="set-stat">Chest: {{ chaosSetStat.bodyArmour.count}}</span>
-                <span class="set-stat">Belt: {{ chaosSetStat.belt.count}}</span>
-                <span class="set-stat">Boots: {{ chaosSetStat.boot.count}}</span>
-                <span class="set-stat">Ring: {{ chaosSetStat.ring.count}}</span>
-                <span class="set-stat">Gloves: {{ chaosSetStat.gloves.count}}</span>
-                <span class="set-stat">Weapon: {{ chaosSetStat.weapon.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('helmet')" (mouseleave)="showHiddenText(null)">H<span
+                        *ngIf="showingText==='helmet'">ead</span>: {{ chaosSetStat.helmet.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('bodyArmour')"  (mouseleave)="showHiddenText(null)">C<span
+                        *ngIf="showingText==='bodyArmour'">hest</span>: {{ chaosSetStat.bodyArmour.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('belt')" (mouseleave)="showHiddenText(null)">B<span
+                        *ngIf="showingText==='belt'">elt</span>: {{ chaosSetStat.belt.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('boot')" (mouseleave)="showHiddenText(null)">B<span
+                        *ngIf="showingText==='boot'">oot</span>: {{ chaosSetStat.boot.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('ring')" (mouseleave)="showHiddenText(null)">R<span
+                        *ngIf="showingText==='ring'">ing</span>: {{ chaosSetStat.ring.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('amulet')" (mouseleave)="showHiddenText(null)">A<span
+                        *ngIf="showingText==='amulet'">ing</span>: {{ chaosSetStat.amulet.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('gloves')" (mouseleave)="showHiddenText(null)">G<span
+                        *ngIf="showingText==='gloves'">loves</span>: {{ chaosSetStat.gloves.count}}</span>
+                <span class="set-stat" (mouseenter)="showHiddenText('weapon')" (mouseleave)="showHiddenText(null)">W<span
+                        *ngIf="showingText==='weapon'">eapon</span>: {{ chaosSetStat.weapon.count}}</span>
             </span>
         </div>
         <div class="actions">
             <button mat-icon-button color="accent" class="done-btn" (click)="refresh()" #doneBtn>
-                <mat-icon  [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
+                <mat-icon [ngClass]="{'spinning': refreshing}">refresh</mat-icon>
             </button>
             <button mat-icon-button color="accent" class="done-btn" (click)="closeWindow()" #doneBtn>
                 <mat-icon>visibility_off</mat-icon>
