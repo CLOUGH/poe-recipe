@@ -56,7 +56,7 @@ export class ChaosRecipeService {
     for (let chaosSetIndex = 0; chaosSetIndex < updatedChaosItemSets.length; chaosSetIndex++) {
       const chaosSet = updatedChaosItemSets[chaosSetIndex];
       let slotted = false;
-      if (chaosSet.isComplete === true || chaosSet.recipe.quantity !== this.getItemYieldQuantity(item, greedy) || this.addingItemMakeSetRegal(item, chaosSet, greedy,itemIndex, stashIndex)===true) {
+      if (chaosSet.isComplete === true || chaosSet.recipe.quantity !== this.getItemYieldQuantity(item, greedy) /*|| this.addingItemMakeSetRegal(item, chaosSet, greedy,itemIndex, stashIndex)===true*/) {
 
         continue;
       }
@@ -191,7 +191,6 @@ export class ChaosRecipeService {
   }
 
   addingItemMakeSetRegal(item: Item, chaosSet: ChaosSet,greedy: Boolean, itemIndex, stashIndex, ) {
-    let noItemInSet = 0;
     let foundChaosItemLevel = false;
     let tempChaosSet = {...chaosSet};
 
